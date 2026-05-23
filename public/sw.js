@@ -11,7 +11,7 @@
  * once connectivity is restored.
  */
 
-const SW_VERSION = "1";
+const SW_VERSION = "2";
 const STATIC_CACHE = `climpire-static-v${SW_VERSION}`;
 const MUTATION_STORE = "offline-mutations";
 const IDB_DB = "climpire-sw";

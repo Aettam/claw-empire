@@ -38,7 +38,7 @@ const silenceEpipe = (proxy: ProxyLike) => {
 const manualChunks = (id: string): string | undefined => {
   if (!id.includes("node_modules")) return undefined;
 
-  // PixiJS — largest dep (~533 KB); deferred via lazy OfficeView
+  // PixiJS 8 + its scoped deps (e.g. @pixi/colord) — deferred via lazy OfficeView
   if (id.includes("/node_modules/@pixi/")) {
     const match = id.match(/\/node_modules\/(@pixi\/[^/]+)\//);
     if (match) return `vendor-${match[1].replace("@pixi/", "pixi-")}`;

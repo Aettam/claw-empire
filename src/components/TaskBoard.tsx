@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState, useRef } from "react";
+import { useCallback, useDeferredValue, useMemo, useState, useRef } from "react";
 
 /** Max task cards rendered per column before virtualizing */
 const COLUMN_RENDER_LIMIT = 40;
@@ -70,6 +70,7 @@ export function TaskBoard({
   const [filterAgent, setFilterAgent] = useState("");
   const [filterType, setFilterType] = useState("");
   const [search, setSearch] = useState("");
+  const deferredSearch = useDeferredValue(search);
   const [showAllTasks, setShowAllTasks] = useState(false);
 
   const hiddenTaskIds = useMemo(
@@ -101,12 +102,12 @@ export function TaskBoard({
       if (filterDept && task.department_id !== filterDept) return false;
       if (filterAgent && task.assigned_agent_id !== filterAgent) return false;
       if (filterType && task.task_type !== filterType) return false;
-      if (search && !task.title.toLowerCase().includes(search.toLowerCase())) return false;
+      if (deferredSearch && !task.title.toLowerCase().includes(deferredSearch.toLowerCase())) return false;
       const isHidden = hiddenTaskIds.has(task.id);
       if (!showAllTasks && isHidden) return false;
       return true;
     });
-  }, [tasks, filterDept, filterAgent, filterType, search, hiddenTaskIds, showAllTasks]);
+  }, [tasks, filterDept, filterAgent, filterType, deferredSearch, hiddenTaskIds, showAllTasks]);
 
   const tasksByStatus = useMemo(() => {
     const grouped: Record<string, Task[]> = {};

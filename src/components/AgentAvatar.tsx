@@ -123,6 +123,8 @@ function AgentAvatar({
           <img
             src={`/sprites/${spriteNum}-D-1.png`}
             alt={agent?.name ?? ""}
+            width={size}
+            height={size}
             className={`w-full h-full ${imageFit === "contain" ? "object-contain" : "object-cover"}`}
             style={{ imageRendering: "pixelated", objectPosition: imagePosition }}
             fetchPriority={lowPriority ? "low" : undefined}

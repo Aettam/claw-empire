@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useDeferredValue, useEffect, useMemo, useRef, useState } from "react";
 import {
   getAvailableLearnedSkills,
   getSkillDetail,
@@ -30,6 +30,7 @@ export function useSkillsLibraryState({ agents, localeTag, t }: { agents: Agent[
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
+  const deferredSearch = useDeferredValue(search);
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortBy, setSortBy] = useState<"rank" | "name" | "installs">("rank");
   const [copiedSkill, setCopiedSkill] = useState<string | null>(null);
@@ -153,8 +154,8 @@ export function useSkillsLibraryState({ agents, localeTag, t }: { agents: Agent[
       result = result.filter((skill) => skill.category === selectedCategory);
     }
 
-    if (search.trim()) {
-      const q = search.toLowerCase();
+    if (deferredSearch.trim()) {
+      const q = deferredSearch.toLowerCase();
       result = result.filter(
         (skill) =>
           skill.name.toLowerCase().includes(q) ||
@@ -170,7 +171,7 @@ export function useSkillsLibraryState({ agents, localeTag, t }: { agents: Agent[
     }
 
     return result;
-  }, [categorizedSkills, localeTag, search, selectedCategory, sortBy]);
+  }, [categorizedSkills, localeTag, deferredSearch, selectedCategory, sortBy]);
 
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = { All: categorizedSkills.length };

@@ -69,6 +69,8 @@ export default function Sidebar({ currentView, onChangeView, departments, agents
             <img
               src="/sprites/ceo-lobster.png"
               alt={tr("CEO", "CEO")}
+              width={32}
+              height={32}
               className="w-8 h-8 object-contain"
               style={{ imageRendering: "pixelated" }}
             />
@@ -107,6 +109,8 @@ export default function Sidebar({ currentView, onChangeView, departments, agents
                   <img
                     src={item.sprite}
                     alt=""
+                    width={20}
+                    height={20}
                     className="w-5 h-5 object-cover rounded-full"
                     style={{ imageRendering: "pixelated" }}
                   />
