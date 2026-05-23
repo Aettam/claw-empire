@@ -354,8 +354,8 @@ export default function AgentDetail({
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="w-[calc(100vw-1.5rem)] max-w-[480px] max-h-[85vh] overflow-hidden rounded-2xl border border-slate-700 bg-slate-800 shadow-2xl">
+    <div className="animate-modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+      <div className="animate-modal-enter w-[calc(100vw-1.5rem)] max-w-[480px] max-h-[85vh] overflow-hidden rounded-2xl border border-slate-700 bg-slate-800 shadow-2xl">
         <div
           className="relative px-6 py-5 border-b border-slate-700"
           style={{
@@ -364,7 +364,8 @@ export default function AgentDetail({
         >
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-700/50 hover:bg-slate-600 flex items-center justify-center text-slate-400 hover:text-white transition-colors"
+            className="absolute top-3 right-3 w-8 h-8 rounded-full bg-slate-700/50 hover:bg-slate-600 flex items-center justify-center text-slate-400 hover:text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
+            style={{ transition: `background-color var(--motion-duration-fast) var(--motion-ease-default), color var(--motion-duration-fast) var(--motion-ease-default)` }}
           >
             ✕
           </button>
@@ -393,8 +394,11 @@ export default function AgentDetail({
 
             <div className="flex-1">
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold text-white">{localeName(language, agent)}</h2>
-                <span className={`text-xs px-1.5 py-0.5 rounded ${statusCfg.bg} ${statusCfg.color}`}>
+                <h2 className="font-bold text-white" style={{ fontSize: "var(--th-text-lg)", lineHeight: "var(--th-leading-lg)" }}>{localeName(language, agent)}</h2>
+                <span
+                  className={`text-xs px-1.5 py-0.5 rounded ${statusCfg.bg} ${statusCfg.color}`}
+                  style={{ transition: "background-color var(--motion-duration-normal, 250ms) var(--motion-ease-default, ease), color var(--motion-duration-normal, 250ms) var(--motion-ease-default, ease)" }}
+                >
                   {statusLabel(statusCfg.label, t)}
                 </span>
               </div>
@@ -739,7 +743,7 @@ export default function AgentDetail({
           ))}
         </div>
 
-        <div className="p-4 overflow-y-auto max-h-[40vh]">
+        <div className="p-4 overflow-y-auto max-h-[40vh] scroll-fade-y">
           <AgentDetailTabContent
             tab={tab}
             t={t}

@@ -1,0 +1,130 @@
+/* ═══════════════════════════════════════════
+   @layer app-utilities — Scrollbar, Focus,
+   Reduced Motion, Dashboard Cards
+   ═══════════════════════════════════════════ */
+@layer app-utilities {
+
+  /* ─── Scrollbar ─── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: var(--th-scrollbar-thumb);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--th-scrollbar-thumb-hover); }
+
+  /* ─── Focus-Visible Accessibility ─── */
+  :where(button:not(:disabled), a, input:not(:disabled), select:not(:disabled), textarea:not(:disabled)):focus-visible {
+    outline: 2px solid var(--th-focus-ring);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 3px var(--th-focus-ring-shadow);
+  }
+  :where(button:not(:disabled), a, input:not(:disabled), select:not(:disabled), textarea:not(:disabled)):focus:not(:focus-visible) {
+    outline: none;
+    box-shadow: none;
+  }
+
+  /* ─── Button Press Feedback ─── */
+  button:not(:disabled):active {
+    scale: 0.97;
+  }
+
+  /* ─── Skeleton Loading ─── */
+  .skeleton-shimmer {
+    background: linear-gradient(
+      90deg,
+      var(--th-bg-surface) 25%,
+      var(--th-bg-surface-hover) 50%,
+      var(--th-bg-surface) 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-wave 1.5s var(--motion-ease-default, cubic-bezier(0.4, 0, 0.2, 1)) infinite;
+  }
+
+  /* ─── Scroll Shadow Fade ─── */
+  /* Apply to scrollable containers to fade top/bottom edges */
+  .scroll-fade-y {
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      black 1.25rem,
+      black calc(100% - 1.25rem),
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      black 1.25rem,
+      black calc(100% - 1.25rem),
+      transparent 100%
+    );
+  }
+
+  /* ─── Reduced Motion ─── */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      transition-delay: 0ms !important;
+      scroll-behavior: auto !important;
+    }
+    /* Ensure entrance animations collapse to final state immediately */
+    .animate-modal-enter,
+    .animate-panel-slide-right,
+    .animate-toast-enter,
+    .animate-card-enter,
+    .animate-greeting {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    /* Indeterminate bar — hide in reduced-motion, show as full-width static bar */
+    .loading-bar-indeterminate {
+      animation: none !important;
+      transform: none !important;
+      width: 100% !important;
+    }
+  }
+
+  /* ─── Dashboard Card Primitives ─── */
+  .dash-card {
+    background: var(--th-card-bg);
+    border: 1px solid var(--th-card-border);
+    border-radius: 1rem;
+    padding: 1.25rem;
+    transition: all var(--motion-duration-normal) var(--motion-ease-default);
+    will-change: transform;
+  }
+  .dash-card:hover {
+    background: var(--th-card-bg-hover);
+    border-color: var(--th-border-strong);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px var(--th-glass-shadow);
+  }
+
+  .dash-panel {
+    background: var(--th-panel-bg);
+    border: 1px solid var(--th-panel-border);
+    border-radius: 1rem;
+    padding: 1.25rem;
+  }
+
+  .dash-label {
+    font-size: var(--th-text-xs, 0.6875rem);
+    font-weight: 600;
+    color: var(--th-label-color);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .dash-icon {
+    width: 2rem;
+    height: 2rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+} /* end @layer app-utilities */

@@ -394,7 +394,7 @@ export default function SettingsPanel({
 
   return (
     <div className="mx-auto max-w-2xl space-y-4 sm:space-y-6">
-      <h2 className="text-xl font-bold flex items-center gap-2" style={{ color: "var(--th-text-heading)" }}>
+      <h2 className="font-bold flex items-center gap-2" style={{ color: "var(--th-text-heading)", fontSize: "var(--th-text-xl)", lineHeight: "var(--th-leading-xl)" }}>
         ⚙️ {t({ ko: "설정", en: "Settings", ja: "設定", zh: "设置" })}
       </h2>
 

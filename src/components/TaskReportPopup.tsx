@@ -351,16 +351,16 @@ export default function TaskReportPopup({ report, agents, departments, uiLanguag
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={onClose}>
+    <div className="animate-modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={onClose}>
       <div
-        className="relative mx-4 w-full max-w-4xl rounded-2xl border border-emerald-500/30 bg-slate-900 shadow-2xl shadow-emerald-500/10"
+        className="animate-modal-enter relative mx-4 w-full max-w-4xl rounded-2xl border border-emerald-500/30 bg-slate-900 shadow-2xl shadow-emerald-500/10"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-slate-700/50 px-6 py-4">
           <div className="min-w-0">
             <div className="mb-1 flex items-center gap-2">
               <span className="text-xl">&#x1F4CB;</span>
-              <h2 className="truncate text-lg font-bold text-white">
+              <h2 className="truncate font-bold text-white" style={{ fontSize: "var(--th-text-lg)", lineHeight: "var(--th-leading-lg)" }}>
                 {t({
                   ko: "작업 완료 보고서",
                   en: "Task Completion Report",
@@ -374,7 +374,8 @@ export default function TaskReportPopup({ report, agents, departments, uiLanguag
           </div>
           <button
             onClick={onClose}
-            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition hover:bg-slate-800 hover:text-white"
+            className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 hover:bg-slate-800 hover:text-white"
+            style={{ transition: `background-color var(--motion-duration-fast) var(--motion-ease-default), color var(--motion-duration-fast) var(--motion-ease-default)` }}
           >
             &#x2715;
           </button>
@@ -434,7 +435,7 @@ export default function TaskReportPopup({ report, agents, departments, uiLanguag
           </div>
         </div>
 
-        <div className="max-h-[68vh] overflow-y-auto px-6 py-4">
+        <div className="max-h-[68vh] overflow-y-auto px-6 py-4 scroll-fade-y">
           {activeTab === "planning" ? (
             renderPlanningSummary()
           ) : selectedTeam ? (

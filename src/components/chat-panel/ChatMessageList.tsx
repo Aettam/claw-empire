@@ -40,7 +40,13 @@ function formatTime(ts: number, locale: string): string {
 function TypingIndicator() {
   return (
     <div className="flex items-center gap-1 px-4 py-2">
-      <div className="flex items-center gap-1 rounded-2xl rounded-bl-sm bg-gray-700 px-4 py-2">
+      <div
+        className="flex items-center gap-1 rounded-2xl rounded-bl-sm px-4 py-2"
+        style={{
+          background: "var(--th-bg-surface)",
+          animation: `list-enter var(--motion-duration-slow, 400ms) var(--motion-ease-bounce, cubic-bezier(0.34, 1.56, 0.64, 1)) both`,
+        }}
+      >
         <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400" style={{ animationDelay: "0ms" }} />
         <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400" style={{ animationDelay: "150ms" }} />
         <span className="h-2 w-2 animate-bounce rounded-full bg-gray-400" style={{ animationDelay: "300ms" }} />
@@ -100,7 +106,7 @@ export default function ChatMessageList({
   );
 
   return (
-    <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 py-4">
+    <div className="min-h-0 flex-1 space-y-3 overflow-y-auto px-4 py-4 scroll-fade-y">
       {visibleMessages.length === 0 ? (
         <div className="flex h-full flex-col items-center justify-center gap-4 text-center">
           <div className="text-6xl">💬</div>
@@ -127,10 +133,14 @@ export default function ChatMessageList({
         </div>
       ) : (
         <>
-          {visibleMessages.map((msg) => {
+          {visibleMessages.map((msg, msgIdx) => {
             const isCeo = msg.sender_type === "ceo";
             const isDirective = msg.message_type === "directive";
             const isSystem = msg.sender_type === "system" || msg.message_type === "announcement" || isDirective;
+            const msgEntranceStyle = {
+              animation: `list-enter var(--motion-duration-slow, 400ms) var(--motion-ease-out, cubic-bezier(0, 0, 0.2, 1)) both`,
+              animationDelay: `${Math.min(msgIdx * 30, 300)}ms`,
+            } as const;
 
             const senderAgent =
               msg.sender_agent ?? agents.find((agent) => agent.id === msg.sender_id) ?? buildFallbackSenderAgent(msg);
@@ -144,8 +154,8 @@ export default function ChatMessageList({
 
             if (msg.sender_type === "agent" && msg.receiver_type === "all") {
               return (
-                <div key={msg.id} className="flex items-end gap-2">
-                  <AgentAvatar agent={senderAgent} spriteMap={spriteMap} size={28} />
+                <div key={msg.id} className="flex items-end gap-2" style={msgEntranceStyle}>
+                  <AgentAvatar agent={senderAgent} spriteMap={spriteMap} size={28} showTooltip />
                   <div className="flex max-w-[75%] flex-col gap-1">
                     <span className="px-1 text-xs text-gray-500">{senderName}</span>
                     <div className="announcement-reply-bubble rounded-2xl rounded-bl-sm border border-yellow-500/20 bg-gray-700/70 px-4 py-2.5 text-sm text-gray-100 shadow-md">
@@ -192,7 +202,7 @@ export default function ChatMessageList({
 
             if (isSystem || msg.receiver_type === "all") {
               return (
-                <div key={msg.id} className="flex flex-col items-center gap-1">
+                <div key={msg.id} className="flex flex-col items-center gap-1" style={msgEntranceStyle}>
                   {isDirective && (
                     <span className="rounded-full border border-red-500/30 bg-red-500/10 px-2 py-0.5 text-xs font-bold text-red-400">
                       {tr("업무지시", "Directive", "業務指示", "业务指示")}
@@ -214,7 +224,7 @@ export default function ChatMessageList({
 
             if (isCeo) {
               return (
-                <div key={msg.id} className="flex flex-col items-end gap-1">
+                <div key={msg.id} className="flex flex-col items-end gap-1" style={msgEntranceStyle}>
                   <span className="px-1 text-xs text-gray-500">{tr("CEO", "CEO")}</span>
                   <div className="max-w-[80%] rounded-2xl rounded-br-sm bg-blue-600 px-4 py-2.5 text-sm text-white shadow-md">
                     <MessageContent content={msg.content} />
@@ -225,8 +235,8 @@ export default function ChatMessageList({
             }
 
             return (
-              <div key={msg.id} className="flex items-end gap-2">
-                <AgentAvatar agent={senderAgent} spriteMap={spriteMap} size={28} />
+              <div key={msg.id} className="flex items-end gap-2" style={msgEntranceStyle}>
+                <AgentAvatar agent={senderAgent} spriteMap={spriteMap} size={28} showTooltip />
                 <div className="flex max-w-[75%] flex-col gap-1">
                   <span className="px-1 text-xs text-gray-500">{senderName}</span>
                   <div className="rounded-2xl rounded-bl-sm bg-gray-700 px-4 py-2.5 text-sm text-gray-100 shadow-md">
@@ -278,7 +288,7 @@ export default function ChatMessageList({
                 <span className="px-1 text-xs text-gray-500">{getAgentName(selectedAgent)}</span>
                 <div className="rounded-2xl rounded-bl-sm border border-emerald-500/20 bg-gray-700 px-4 py-2.5 text-sm text-gray-100 shadow-md">
                   <MessageContent content={streamingMessage.content} />
-                  <span className="ml-0.5 inline-block h-4 w-1.5 animate-pulse rounded-sm bg-emerald-400 align-text-bottom" />
+                  <span className="animate-streaming-cursor ml-0.5 inline-block h-4 w-1.5 rounded-sm bg-emerald-400 align-text-bottom" />
                 </div>
               </div>
             </div>

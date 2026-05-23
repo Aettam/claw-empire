@@ -53,7 +53,10 @@ export function DashboardHeroHeader({
       <div className="relative flex flex-wrap items-center justify-between gap-4">
         <div className="space-y-1.5">
           <div className="flex items-center gap-3">
-            <h1 className="dashboard-title-gradient text-2xl font-black tracking-tight sm:text-3xl">{companyName}</h1>
+            <h1
+              className="dashboard-title-gradient font-black tracking-tight"
+              style={{ fontSize: "var(--th-text-2xl)", lineHeight: "var(--th-leading-2xl)" }}
+            >{companyName}</h1>
             <span className="flex items-center gap-1.5 rounded-full border border-emerald-400/40 bg-emerald-500/15 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-emerald-300">
               <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
               {t({ ko: "실시간", en: "LIVE", ja: "ライブ", zh: "实时" })}
@@ -127,11 +130,17 @@ interface DashboardHudStatsProps {
 export function DashboardHudStats({ hudStats, numberFormatter }: DashboardHudStatsProps) {
   return (
     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-      {hudStats.map((stat) => (
+      {hudStats.map((stat, statIdx) => (
         <div
           key={stat.id}
-          className="game-panel group relative overflow-hidden p-4 transition-all duration-300 hover:-translate-y-0.5"
-          style={{ borderColor: `${stat.color}25` }}
+          className="game-panel group relative overflow-hidden p-4 hover:-translate-y-0.5"
+          style={{
+            borderColor: `${stat.color}25`,
+            animation: `list-enter var(--motion-duration-slow, 400ms) var(--motion-ease-bounce, cubic-bezier(0.34, 1.56, 0.64, 1)) both`,
+            animationDelay: `${statIdx * 80}ms`,
+            transition: `transform var(--motion-duration-normal, 250ms) var(--motion-ease-default, ease),
+                         box-shadow var(--motion-duration-normal, 250ms) var(--motion-ease-default, ease)`,
+          }}
         >
           <div
             className="absolute top-0 left-0 right-0 h-[2px] opacity-60"
@@ -197,7 +206,7 @@ export function DashboardRankingBoard({
             🏆
           </span>
           <div>
-            <h2 className="dashboard-ranking-gradient text-lg font-black uppercase tracking-wider">
+            <h2 className="dashboard-ranking-gradient font-black uppercase tracking-wider" style={{ fontSize: "var(--th-text-lg)", lineHeight: "var(--th-leading-lg)" }}>
               {t({ ko: "랭킹 보드", en: "RANKING BOARD", ja: "ランキングボード", zh: "排行榜" })}
             </h2>
             <p className="text-[10px]" style={{ color: "var(--th-text-muted)" }}>
@@ -281,7 +290,7 @@ export function DashboardRankingBoard({
                         border: `2px solid ${tier.color}80`,
                       }}
                     >
-                      <AgentAvatar agent={agentMap.get(agent.id)} agents={agents} size={avatarSize} rounded="2xl" />
+                      <AgentAvatar agent={agentMap.get(agent.id)} agents={agents} size={avatarSize} rounded="2xl" showTooltip />
                     </div>
 
                     <span
@@ -328,8 +337,15 @@ export function DashboardRankingBoard({
                 return (
                   <div
                     key={agent.id}
-                    className="group flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 transition-all duration-200 hover:bg-white/[0.05] hover:translate-x-1"
-                    style={{ borderLeftWidth: "3px", borderLeftColor: `${tier.color}60` }}
+                    className="group flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 hover:bg-white/[0.05] hover:translate-x-1"
+                    style={{
+                      borderLeftWidth: "3px",
+                      borderLeftColor: `${tier.color}60`,
+                      animation: `list-enter var(--motion-duration-slow, 400ms) var(--motion-ease-out, cubic-bezier(0, 0, 0.2, 1)) both`,
+                      animationDelay: `${idx * 60}ms`,
+                      transition: `background-color var(--motion-duration-normal, 250ms) var(--motion-ease-default, ease),
+                                   transform var(--motion-duration-normal, 250ms) var(--motion-ease-default, ease)`,
+                    }}
                   >
                     <span className="w-8 text-center font-mono text-sm font-black" style={{ color: `${tier.color}80` }}>
                       #{rank}
@@ -338,7 +354,7 @@ export function DashboardRankingBoard({
                       className="flex-shrink-0 overflow-hidden rounded-xl"
                       style={{ border: `1px solid ${tier.color}40` }}
                     >
-                      <AgentAvatar agent={agentMap.get(agent.id)} agents={agents} size={36} rounded="xl" />
+                      <AgentAvatar agent={agentMap.get(agent.id)} agents={agents} size={36} rounded="xl" showTooltip />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-bold" style={{ color: "var(--th-text-primary)" }}>
@@ -383,7 +399,7 @@ export function DashboardRankingBoard({
                     className="overflow-hidden rounded-2xl"
                     style={{ border: `2px solid ${tier.color}60`, boxShadow: `0 0 15px ${tier.glow}` }}
                   >
-                    <AgentAvatar agent={agentMap.get(agent.id)} agents={agents} size={52} rounded="2xl" />
+                    <AgentAvatar agent={agentMap.get(agent.id)} agents={agents} size={52} rounded="2xl" showTooltip />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="text-base font-black" style={{ color: tier.color }}>

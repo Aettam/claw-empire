@@ -261,7 +261,7 @@ export default function SkillHistoryPanel({
 
       <div className="px-3 pb-2 text-[10px] text-slate-500">Retention: {retentionDays} days</div>
 
-      <div className="min-h-0 flex-1 space-y-2 overflow-y-auto px-3 pb-3">
+      <div className="scroll-fade-y min-h-0 flex-1 space-y-2 overflow-y-auto px-3 pb-3">
         {loading && historyRows.length === 0 && availableRows.length === 0 && (
           <div className="rounded-lg border border-slate-700 bg-slate-800/40 px-3 py-6 text-center text-xs text-slate-400">
             Loading memory records...

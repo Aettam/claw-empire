@@ -65,11 +65,11 @@ export default function LearningModal({
   if (!learningSkill) return null;
 
   return (
-    <div className="skills-learn-modal fixed inset-0 z-[80] flex items-center justify-center bg-slate-950/75 backdrop-blur-sm p-4">
-      <div className="skills-learn-modal-card w-full max-w-3xl max-h-[90vh] overflow-hidden rounded-2xl border border-slate-700/60 bg-slate-900/95 shadow-2xl">
+    <div className="skills-learn-modal animate-modal-backdrop fixed inset-0 z-[80] flex items-center justify-center bg-slate-950/75 backdrop-blur-sm p-4">
+      <div className="skills-learn-modal-card animate-modal-enter w-full max-w-3xl max-h-[90vh] overflow-hidden rounded-2xl border border-slate-700/60 bg-slate-900/95 shadow-2xl">
         <div className="flex items-start justify-between gap-4 border-b border-slate-700/60 px-5 py-4">
           <div>
-            <h3 className="text-base font-semibold text-white">
+            <h3 className="font-semibold text-white" style={{ fontSize: "var(--th-text-base)", lineHeight: "var(--th-leading-base)" }}>
               {t({
                 ko: "스킬 학습 스쿼드",
                 en: "Skill Learning Squad",
@@ -96,7 +96,7 @@ export default function LearningModal({
           </button>
         </div>
 
-        <div className="space-y-4 overflow-y-auto px-5 py-4 max-h-[calc(90vh-72px)]">
+        <div className="scroll-fade-y space-y-4 overflow-y-auto px-5 py-4 max-h-[calc(90vh-72px)]">
           <div className="rounded-xl border border-emerald-500/25 bg-emerald-500/8 px-3 py-2">
             <div className="text-[11px] text-emerald-200">
               {t({ ko: "실행 명령", en: "Install command", ja: "実行コマンド", zh: "执行命令" })}

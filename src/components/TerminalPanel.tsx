@@ -415,14 +415,14 @@ export default function TerminalPanel({
       : null;
 
   return (
-    <div className="terminal-panel-shell fixed inset-0 z-50 flex w-full max-w-full flex-col shadow-2xl lg:inset-y-0 lg:right-0 lg:left-auto lg:w-[560px] lg:border-l">
+    <div className="animate-panel-slide-right terminal-panel-shell fixed inset-0 z-50 flex w-full max-w-full flex-col shadow-2xl lg:inset-y-0 lg:right-0 lg:left-auto lg:w-[560px] lg:border-l">
       {/* Header */}
       <div className="terminal-panel-header flex items-center gap-3 border-b px-4 py-3">
         <div className="flex items-center gap-2 flex-1 min-w-0">
           {agent && <AgentAvatar agent={agent} agents={agents} size={28} />}
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
-              <h3 className="text-sm font-bold truncate" style={{ color: "var(--th-text-heading)" }}>
+              <h3 className="font-bold truncate" style={{ color: "var(--th-text-heading)", fontSize: "var(--th-text-sm)", lineHeight: "var(--th-leading-sm)" }}>
                 {task?.title ?? taskId}
               </h3>
               <span className={`text-[10px] px-1.5 py-0.5 rounded border ${badge.color} flex-shrink-0`}>
@@ -650,7 +650,7 @@ export default function TerminalPanel({
 
       {/* Task log markers (system events) */}
       {activeTab === "terminal" && taskLogs.length > 0 && (
-        <div className="terminal-panel-strip max-h-24 space-y-0.5 overflow-y-auto border-b px-4 py-2">
+        <div className="terminal-panel-strip scroll-fade-y max-h-24 space-y-0.5 overflow-y-auto border-b px-4 py-2">
           {taskLogs.map((log) => {
             const kindColor =
               log.kind === "error" ? "text-red-400" : log.kind === "system" ? "text-cyan-400" : "text-slate-500";

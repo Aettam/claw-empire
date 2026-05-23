@@ -1,5 +1,7 @@
-@import "./styles/index.part01.css";
-@import "./styles/index.part02.css";
-@import "./styles/index.part03.css";
-@import "./styles/index.part04.css";
-@import "./styles/index.part05.css";
+@layer app-theme, app-layout, app-components, app-animations, app-utilities;
+
+@import "./styles/theme.css";
+@import "./styles/layout.css";
+@import "./styles/components.css";
+@import "./styles/animations.css";
+@import "./styles/utilities.css";

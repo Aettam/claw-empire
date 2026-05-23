@@ -458,4 +458,16 @@
     animation: streaming-blink var(--motion-duration-normal) ease-in-out infinite;
   }
 
+  /* ─── Indeterminate Loading Bar ─── */
+  @keyframes progress-indeterminate {
+    0% { transform: translateX(-100%) scaleX(0.4); }
+    40% { transform: translateX(0%) scaleX(0.7); }
+    70% { transform: translateX(60%) scaleX(0.5); }
+    100% { transform: translateX(130%) scaleX(0.3); }
+  }
+  .loading-bar-indeterminate {
+    transform-origin: left center;
+    animation: progress-indeterminate 1.6s var(--motion-ease-default, cubic-bezier(0.4, 0, 0.2, 1)) infinite;
+  }
+
 } /* end @layer app-animations */

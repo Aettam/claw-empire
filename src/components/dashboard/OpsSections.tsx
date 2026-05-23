@@ -39,8 +39,8 @@ export function DashboardDeptAndSquad({
     <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.2fr_1fr]">
       <div className="game-panel p-5">
         <h2
-          className="mb-4 flex items-center gap-2 text-sm font-black uppercase tracking-wider"
-          style={{ color: "var(--th-text-primary)" }}
+          className="mb-4 flex items-center gap-2 font-black uppercase tracking-wider"
+          style={{ color: "var(--th-text-primary)", fontSize: "var(--th-text-sm)", lineHeight: "var(--th-leading-sm)" }}
         >
           <span
             className="flex h-7 w-7 items-center justify-center rounded-lg bg-blue-500/15 text-sm"
@@ -67,10 +67,14 @@ export function DashboardDeptAndSquad({
           </div>
         ) : (
           <div className="space-y-2.5">
-            {deptData.map((dept) => (
+            {deptData.map((dept, deptIdx) => (
               <article
                 key={dept.id}
                 className="group relative overflow-hidden rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 transition-all duration-200 hover:bg-white/[0.04] hover:translate-x-1"
+                style={{
+                  animation: `list-enter var(--motion-duration-slow, 400ms) var(--motion-ease-out, cubic-bezier(0, 0, 0.2, 1)) both`,
+                  animationDelay: `${Math.min(deptIdx * 60, 360)}ms`,
+                }}
               >
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2.5">
@@ -116,8 +120,8 @@ export function DashboardDeptAndSquad({
       <div className="game-panel p-5">
         <div className="mb-4 flex items-center justify-between">
           <h2
-            className="flex items-center gap-2 text-sm font-black uppercase tracking-wider"
-            style={{ color: "var(--th-text-primary)" }}
+            className="flex items-center gap-2 font-black uppercase tracking-wider"
+            style={{ color: "var(--th-text-primary)", fontSize: "var(--th-text-sm)", lineHeight: "var(--th-leading-sm)" }}
           >
             <span
               className="flex h-7 w-7 items-center justify-center rounded-lg bg-cyan-500/15 text-sm"
@@ -218,8 +222,8 @@ export function DashboardMissionLog({
     <div className="game-panel p-5">
       <div className="mb-4 flex items-center justify-between">
         <h2
-          className="flex items-center gap-2 text-sm font-black uppercase tracking-wider"
-          style={{ color: "var(--th-text-primary)" }}
+          className="flex items-center gap-2 font-black uppercase tracking-wider"
+          style={{ color: "var(--th-text-primary)", fontSize: "var(--th-text-sm)", lineHeight: "var(--th-leading-sm)" }}
         >
           <span
             className="flex h-7 w-7 items-center justify-center rounded-lg bg-violet-500/15 text-sm"
@@ -258,7 +262,7 @@ export function DashboardMissionLog({
         </div>
       ) : (
         <div className="space-y-2">
-          {recentTasks.map((task) => {
+          {recentTasks.map((task, taskIdx) => {
             const statusInfo = STATUS_LABELS[task.status] ?? {
               color: "bg-slate-600/20 text-slate-200 border-slate-500/30",
               dot: "bg-slate-400",
@@ -271,6 +275,10 @@ export function DashboardMissionLog({
               <article
                 key={task.id}
                 className={`group grid grid-cols-[auto_1fr_auto] items-center gap-3 rounded-xl border border-white/[0.06] border-l-[3px] ${leftBorder} bg-white/[0.02] p-3 transition-all duration-200 hover:bg-white/[0.04] hover:translate-x-1`}
+                style={{
+                  animation: `list-enter var(--motion-duration-slow, 400ms) var(--motion-ease-out, cubic-bezier(0, 0, 0.2, 1)) both`,
+                  animationDelay: `${Math.min(taskIdx * 40, 300)}ms`,
+                }}
               >
                 {assignedAgent ? (
                   <AgentAvatar agent={assignedAgent} agents={agents} size={36} rounded="xl" />

@@ -305,7 +305,10 @@ export default function SkillsGrid({
       {/* IntersectionObserver sentinel — triggers next page load */}
       {visibleCount < filtered.length && (
         <div ref={sentinelRef} className="flex items-center justify-center py-6">
-          <div className="animate-spin w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full" />
+          <div
+            className="animate-spin w-5 h-5 border-2 border-t-transparent rounded-full"
+            style={{ borderColor: "var(--color-empire-blue)", borderTopColor: "transparent" }}
+          />
         </div>
       )}
 

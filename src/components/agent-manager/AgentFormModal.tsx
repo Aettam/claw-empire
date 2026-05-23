@@ -67,14 +67,14 @@ export default function AgentFormModal({
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="animate-modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4"
       style={{ background: "var(--th-modal-overlay)" }}
       onClick={(e) => {
         if (e.target === overlayRef.current) onClose();
       }}
     >
       <div
-        className="w-full max-w-2xl max-h-[90vh] overflow-y-auto overscroll-contain rounded-2xl p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+        className="animate-modal-enter w-full max-w-2xl max-h-[90vh] overflow-y-auto overscroll-contain rounded-2xl p-6 shadow-2xl scroll-fade-y"
         style={{
           background: "var(--th-card-bg)",
           border: "1px solid var(--th-card-border)",
@@ -83,7 +83,7 @@ export default function AgentFormModal({
       >
         {/* Modal header */}
         <div className="flex items-center justify-between mb-5">
-          <h3 className="text-base font-bold" style={{ color: "var(--th-text-heading)" }}>
+          <h3 className="font-bold" style={{ color: "var(--th-text-heading)", fontSize: "var(--th-text-base)", lineHeight: "var(--th-leading-base)" }}>
             {isEdit ? tr("직원 정보 수정", "Edit Agent") : tr("신규 직원 채용", "Hire New Agent")}
           </h3>
           <button
