@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { Agent, Department } from "../../types";
 import { useI18n } from "../../i18n";
 import AgentSelect from "../AgentSelect";
@@ -16,7 +17,7 @@ interface FilterBarProps {
   onSearch: (value: string) => void;
 }
 
-export default function FilterBar({
+function FilterBar({
   agents,
   departments,
   filterDept,
@@ -80,3 +81,5 @@ export default function FilterBar({
     </div>
   );
 }
+
+export default memo(FilterBar);

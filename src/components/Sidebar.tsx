@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import type { Department, Agent, CompanySettings } from "../types";
 import { useI18n, localeName } from "../i18n";
 
@@ -33,7 +33,7 @@ const NAV_ITEMS: { view: View; icon: string; sprite?: string }[] = [
   { view: "settings", icon: "⚙️" },
 ];
 
-export default function Sidebar({ currentView, onChangeView, departments, agents, settings, connected }: SidebarProps) {
+function Sidebar({ currentView, onChangeView, departments, agents, settings, connected }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const { t, locale } = useI18n();
   const workingCount = agents.filter((a) => a.status === "working").length;
@@ -175,3 +175,5 @@ export default function Sidebar({ currentView, onChangeView, departments, agents
     </aside>
   );
 }
+
+export default memo(Sidebar);

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import type { WorkflowPackKey } from "../types";
 import type { View } from "./types";
 
@@ -43,7 +44,7 @@ interface AppHeaderBarProps {
   onCloseMobileHeaderMenu: () => void;
 }
 
-export default function AppHeaderBar({
+function AppHeaderBar({
   currentView,
   connected,
   reconnectAttempt = 0,
@@ -100,6 +101,7 @@ export default function AppHeaderBar({
                 alt=""
                 width={20}
                 height={20}
+                loading="lazy"
                 className="absolute left-0 top-0 w-5 h-5 rounded-full object-cover"
                 style={{ imageRendering: "pixelated", opacity: 0.85 }}
               />
@@ -108,6 +110,7 @@ export default function AppHeaderBar({
                 alt=""
                 width={20}
                 height={20}
+                loading="lazy"
                 className="absolute left-2.5 top-0.5 w-5 h-5 rounded-full object-cover"
                 style={{ imageRendering: "pixelated", zIndex: 1 }}
               />
@@ -350,3 +353,5 @@ export default function AppHeaderBar({
     </header>
   );
 }
+
+export default memo(AppHeaderBar);

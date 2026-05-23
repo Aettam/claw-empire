@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { memo, useState, useRef, useEffect, useMemo } from "react";
 import type { Agent, Department } from "../types";
 import AgentAvatar, { useSpriteMap } from "./AgentAvatar";
 import { useI18n, localeName } from "../i18n";
@@ -21,7 +21,7 @@ const ROLE_LABELS: Record<string, LangText> = {
   intern: { ko: "인턴", en: "Intern", ja: "インターン", zh: "实习生" },
 };
 
-export default function AgentSelect({
+function AgentSelect({
   agents,
   departments,
   value,
@@ -145,3 +145,5 @@ export default function AgentSelect({
     </div>
   );
 }
+
+export default memo(AgentSelect);

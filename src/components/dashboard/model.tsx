@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { UiLanguage } from "../../i18n";
 
 export type Locale = UiLanguage;
@@ -14,18 +14,17 @@ export function useNow(localeTag: string, t: TFunction) {
     return () => window.clearInterval(timer);
   }, []);
 
-  const date = now.toLocaleDateString(localeTag, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    weekday: "long",
-  });
+  const dateFmt = useMemo(
+    () => new Intl.DateTimeFormat(localeTag, { year: "numeric", month: "long", day: "numeric", weekday: "long" }),
+    [localeTag],
+  );
+  const timeFmt = useMemo(
+    () => new Intl.DateTimeFormat(localeTag, { hour: "2-digit", minute: "2-digit", hour12: false }),
+    [localeTag],
+  );
 
-  const time = now.toLocaleTimeString(localeTag, {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
+  const date = dateFmt.format(now);
+  const time = timeFmt.format(now);
 
   const hour = now.getHours();
   const briefing =
