@@ -91,6 +91,7 @@ export default defineConfig({
   build: {
     outDir: "dist",
     chunkSizeWarningLimit: 550,
+    assetsInlineLimit: 4096,
     rollupOptions: {
       output: {
         manualChunks,

@@ -1,6 +1,7 @@
 import { useState, useRef, useMemo, useCallback } from "react";
 import type { DecisionInboxItem } from "./components/chat/decision-inbox";
 import { useWebSocket } from "./hooks/useWebSocket";
+import { useNetworkStatus } from "./hooks/useNetworkStatus";
 import type {
   Department,
   Agent,
@@ -266,7 +267,8 @@ export default function App() {
       });
   };
 
-  const { connected, on } = useWebSocket();
+  const { connected, reconnectAttempt, on } = useWebSocket();
+  const { online: networkOnline } = useNetworkStatus();
   const shouldIncludeSeedAgents = useCallback(
     () => normalizeOfficeWorkflowPack(settings.officeWorkflowPack ?? "development") !== "development",
     [settings.officeWorkflowPack],
@@ -392,6 +394,8 @@ export default function App() {
   return (
     <AppMainLayout
       connected={connected}
+      reconnectAttempt={reconnectAttempt}
+      networkOnline={networkOnline}
       view={view}
       setView={setView}
       departments={departments}

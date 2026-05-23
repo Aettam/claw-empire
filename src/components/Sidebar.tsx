@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { Department, Agent, CompanySettings } from "../types";
 import { useI18n, localeName } from "../i18n";
 
-type View = "office" | "agents" | "dashboard" | "tasks" | "skills" | "settings";
+type View = "office" | "agents" | "dashboard" | "tasks" | "skills" | "settings" | "hermes";
 
 interface SidebarProps {
   currentView: View;
@@ -13,12 +13,23 @@ interface SidebarProps {
   connected: boolean;
 }
 
+const PREFETCH_MAP: Partial<Record<View, () => Promise<unknown>>> = {
+  office: () => import("./OfficeView"),
+  agents: () => import("./AgentManager"),
+  skills: () => import("./SkillsLibrary"),
+  dashboard: () => import("./Dashboard"),
+  tasks: () => import("./TaskBoard"),
+  hermes: () => import("./HermesPanel"),
+  settings: () => import("./SettingsPanel"),
+};
+
 const NAV_ITEMS: { view: View; icon: string; sprite?: string }[] = [
   { view: "office", icon: "🏢" },
   { view: "agents", icon: "👥", sprite: "/sprites/3-D-1.png" },
   { view: "skills", icon: "📚" },
   { view: "dashboard", icon: "📊" },
   { view: "tasks", icon: "📋" },
+  { view: "hermes", icon: "⚡" },
   { view: "settings", icon: "⚙️" },
 ];
 
@@ -36,6 +47,7 @@ export default function Sidebar({ currentView, onChangeView, departments, agents
     skills: tr("문서고", "Library", "ライブラリ", "文档库"),
     dashboard: tr("대시보드", "Dashboard", "ダッシュボード", "仪表盘"),
     tasks: tr("업무 관리", "Tasks", "タスク管理", "任务管理"),
+    hermes: tr("허메스", "Hermes", "ヘルメス", "赫尔墨斯"),
     settings: tr("설정", "Settings", "設定", "设置"),
   };
 
@@ -81,6 +93,7 @@ export default function Sidebar({ currentView, onChangeView, departments, agents
           <button
             key={item.view}
             onClick={() => onChangeView(item.view)}
+            onMouseEnter={() => PREFETCH_MAP[item.view]?.()}
             className={`sidebar-nav-item ${
               currentView === item.view ? "active font-semibold shadow-sm shadow-blue-500/10" : ""
             }`}
@@ -134,7 +147,12 @@ export default function Sidebar({ currentView, onChangeView, departments, agents
       {/* Status bar */}
       <div className="px-3 py-2.5" style={{ borderTop: "1px solid var(--th-border)" }}>
         <div className="flex items-center gap-2">
-          <div className={`w-2.5 h-2.5 rounded-full ${connected ? "bg-green-500 animate-pulse" : "bg-red-500"}`} />
+          <div
+            className={`w-2.5 h-2.5 rounded-full ${connected ? "bg-green-500 animate-pulse" : "bg-red-500"}`}
+            style={{
+              transition: `background-color var(--motion-duration-normal, 250ms) var(--motion-ease-default, ease)`,
+            }}
+          />
           {!collapsed && (
             <div className="text-[10px]" style={{ color: "var(--th-text-muted)" }}>
               {connected

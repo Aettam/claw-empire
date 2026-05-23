@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import type { Agent, Department, SubTask, Task, TaskStatus } from "../../types";
 import { useI18n } from "../../i18n";
 import AgentAvatar from "../AgentAvatar";
@@ -42,7 +42,7 @@ const SUBTASK_STATUS_ICON: Record<string, string> = {
   blocked: "\uD83D\uDEAB",
 };
 
-export default function TaskCard({
+function TaskCard({
   task,
   agents,
   departments,
@@ -88,11 +88,17 @@ export default function TaskCard({
 
   return (
     <div
-      className={`group rounded-xl border p-3.5 shadow-sm transition hover:shadow-md ${
+      className={`group rounded-xl border p-3.5 shadow-sm hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 ${
         isHiddenTask
           ? "border-cyan-700/80 bg-slate-800/80 hover:border-cyan-600"
           : "border-slate-700 bg-slate-800 hover:border-slate-600"
       }`}
+      style={{
+        transition: `transform var(--motion-duration-normal, 250ms) var(--motion-ease-default, ease),
+                     box-shadow var(--motion-duration-normal, 250ms) var(--motion-ease-default, ease),
+                     border-color var(--motion-duration-normal, 250ms) var(--motion-ease-default, ease)`,
+        outlineColor: "var(--th-focus-ring)",
+      }}
     >
       <div className="mb-2 flex items-start justify-between gap-2">
         <button
@@ -147,7 +153,7 @@ export default function TaskCard({
         <div className="flex items-center gap-1.5">
           {assignedAgent && assignedLabel ? (
             <>
-              <AgentAvatar agent={assignedAgent} agents={agents} size={20} />
+              <AgentAvatar agent={assignedAgent} agents={agents} size={20} showTooltip />
               <span className="text-xs text-slate-300">{assignedLabel}</span>
             </>
           ) : assignedLabel ? (
@@ -207,8 +213,11 @@ export default function TaskCard({
           >
             <div className="flex-1 h-1.5 bg-slate-700 rounded-full overflow-hidden">
               <div
-                className="h-full bg-gradient-to-r from-green-500 to-emerald-400 rounded-full transition-all"
-                style={{ width: `${Math.round(((task.subtask_done ?? 0) / (task.subtask_total ?? 1)) * 100)}%` }}
+                className="h-full bg-gradient-to-r from-green-500 to-emerald-400 rounded-full"
+                style={{
+                  width: `${Math.round(((task.subtask_done ?? 0) / (task.subtask_total ?? 1)) * 100)}%`,
+                  transition: `width var(--motion-duration-slow, 400ms) var(--motion-ease-out, cubic-bezier(0, 0, 0.2, 1))`,
+                }}
               />
             </div>
             <span className="text-xs text-slate-400 whitespace-nowrap">
@@ -418,3 +427,29 @@ export default function TaskCard({
     </div>
   );
 }
+
+export default memo(TaskCard, (prev, next) =>
+  prev.task.id === next.task.id &&
+  prev.task.status === next.task.status &&
+  prev.task.title === next.task.title &&
+  prev.task.description === next.task.description &&
+  prev.task.priority === next.task.priority &&
+  prev.task.assigned_agent_id === next.task.assigned_agent_id &&
+  prev.task.subtask_done === next.task.subtask_done &&
+  prev.task.subtask_total === next.task.subtask_total &&
+  prev.isHiddenTask === next.isHiddenTask &&
+  prev.agents === next.agents &&
+  prev.departments === next.departments &&
+  prev.taskSubtasks === next.taskSubtasks &&
+  prev.onUpdateTask === next.onUpdateTask &&
+  prev.onDeleteTask === next.onDeleteTask &&
+  prev.onAssignTask === next.onAssignTask &&
+  prev.onRunTask === next.onRunTask &&
+  prev.onStopTask === next.onStopTask &&
+  prev.onPauseTask === next.onPauseTask &&
+  prev.onResumeTask === next.onResumeTask &&
+  prev.onOpenTerminal === next.onOpenTerminal &&
+  prev.onOpenMeetingMinutes === next.onOpenMeetingMinutes &&
+  prev.onHideTask === next.onHideTask &&
+  prev.onUnhideTask === next.onUnhideTask,
+);

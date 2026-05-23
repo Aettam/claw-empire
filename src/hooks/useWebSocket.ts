@@ -11,6 +11,7 @@ export function useWebSocket() {
   const wsRef = useRef<WebSocket | null>(null);
   const listenersRef = useRef<Map<WSEventType, Set<Listener>>>(new Map());
   const [connected, setConnected] = useState(false);
+  const [reconnectAttempt, setReconnectAttempt] = useState(0);
 
   useEffect(() => {
     const proto = location.protocol === "https:" ? "wss:" : "ws:";
@@ -71,13 +72,16 @@ export function useWebSocket() {
       ws.onopen = () => {
         if (!alive) return;
         setConnected(true);
+        setReconnectAttempt(0);
         attemptCount = 0; // reset backoff on successful connection
       };
       ws.onclose = (event) => {
         if (!alive) return;
         setConnected(false);
         if (event.code === 1008) forceSessionBootstrap = true;
-        reconnectTimer = setTimeout(() => void connect(), nextDelay());
+        const delay = nextDelay();
+        setReconnectAttempt(attemptCount);
+        reconnectTimer = setTimeout(() => void connect(), delay);
       };
       ws.onerror = () => ws.close();
       ws.onmessage = (e) => {
@@ -114,5 +118,5 @@ export function useWebSocket() {
     };
   }, []);
 
-  return { connected, on };
+  return { connected, reconnectAttempt, on };
 }

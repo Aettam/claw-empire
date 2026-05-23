@@ -71,6 +71,8 @@ interface AppMainLayoutLabels {
 
 interface AppMainLayoutProps {
   connected: boolean;
+  reconnectAttempt: number;
+  networkOnline: boolean;
   view: View;
   setView: (view: View) => void;
   departments: Department[];
@@ -142,6 +144,8 @@ interface AppMainLayoutProps {
 
 export default function AppMainLayout({
   connected,
+  reconnectAttempt,
+  networkOnline,
   view,
   setView,
   departments,
@@ -204,14 +208,6 @@ export default function AppMainLayout({
     labels.uiLanguage === "ko" || labels.uiLanguage === "ja" || labels.uiLanguage === "zh" ? labels.uiLanguage : "en";
   const officePackKey = normalizeOfficeWorkflowPack(activeOfficeWorkflowPack);
   const officePackOptions = useMemo(() => listOfficePackOptions(uiLanguage), [uiLanguage]);
-  const officePackLabel =
-    labels.uiLanguage === "ko"
-      ? "오피스 팩"
-      : labels.uiLanguage === "ja"
-        ? "オフィスパック"
-        : labels.uiLanguage === "zh"
-          ? "办公室包"
-          : "Office Pack";
   const officePackBootstrappingMessage = useMemo(() => {
     if (!officePackBootstrappingLabel) return null;
     if (uiLanguage === "ko") return `${officePackBootstrappingLabel} 오피스 팩 배치중...`;
@@ -319,6 +315,36 @@ export default function AppMainLayout({
         ? officeScopedAgents
         : (activePackProfile?.agents ?? seededPackAgents);
 
+  const officePackLabel = useMemo(() => {
+    if (labels.uiLanguage === "ko") return "오피스 팩";
+    if (labels.uiLanguage === "ja") return "オフィスパック";
+    if (labels.uiLanguage === "zh") return "办公室包";
+    return "Office Pack";
+  }, [labels.uiLanguage]);
+
+  const officePackControl = useMemo(
+    () =>
+      view === "office" || view === "agents" || view === "tasks"
+        ? {
+            label: officePackLabel,
+            value: officePackKey,
+            options: officePackOptions,
+            onChange: onChangeOfficeWorkflowPack,
+          }
+        : null,
+    [view, officePackLabel, officePackKey, officePackOptions, onChangeOfficeWorkflowPack],
+  );
+
+  const handleOpenMobileNav = useCallback(() => setMobileNavOpen(true), [setMobileNavOpen]);
+  const handleToggleMobileHeaderMenu = useCallback(
+    () => setMobileHeaderMenuOpen(!mobileHeaderMenuOpen),
+    [setMobileHeaderMenuOpen, mobileHeaderMenuOpen],
+  );
+  const handleCloseMobileHeaderMenu = useCallback(
+    () => setMobileHeaderMenuOpen(false),
+    [setMobileHeaderMenuOpen],
+  );
+
   const officePresentation = useMemo(() => {
     if (officePackKey === "development") return generatedOfficePresentation;
     return {
@@ -382,6 +408,8 @@ export default function AppMainLayout({
           <AppHeaderBar
             currentView={view}
             connected={connected}
+            reconnectAttempt={reconnectAttempt}
+            networkOnline={networkOnline}
             viewTitle={labels.viewTitle}
             tasksPrimaryLabel={labels.tasksPrimaryLabel}
             decisionLabel={labels.decisionLabel}
@@ -393,26 +421,17 @@ export default function AppMainLayout({
             roomManagerLabel={labels.roomManagerLabel}
             theme={theme}
             mobileHeaderMenuOpen={mobileHeaderMenuOpen}
-            onOpenMobileNav={() => setMobileNavOpen(true)}
+            onOpenMobileNav={handleOpenMobileNav}
             onOpenTasks={() => setView("tasks")}
             onOpenDecisionInbox={onOpenDecisionInbox}
             onOpenAgentStatus={onOpenAgentStatus}
             onOpenReportHistory={onOpenReportHistory}
             onOpenAnnouncement={onOpenAnnouncement}
             onOpenRoomManager={onOpenRoomManager}
-            officePackControl={
-              view === "office" || view === "agents" || view === "tasks"
-                ? {
-                    label: officePackLabel,
-                    value: officePackKey,
-                    options: officePackOptions,
-                    onChange: onChangeOfficeWorkflowPack,
-                  }
-                : null
-            }
+            officePackControl={officePackControl}
             onToggleTheme={toggleTheme}
-            onToggleMobileHeaderMenu={() => setMobileHeaderMenuOpen(!mobileHeaderMenuOpen)}
-            onCloseMobileHeaderMenu={() => setMobileHeaderMenuOpen(false)}
+            onToggleMobileHeaderMenu={handleToggleMobileHeaderMenu}
+            onCloseMobileHeaderMenu={handleCloseMobileHeaderMenu}
           />
 
           {officePackBootstrappingMessage && (

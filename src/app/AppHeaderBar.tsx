@@ -12,6 +12,8 @@ type OfficePackOption = {
 interface AppHeaderBarProps {
   currentView: View;
   connected: boolean;
+  reconnectAttempt?: number;
+  networkOnline?: boolean;
   viewTitle: string;
   tasksPrimaryLabel: string;
   decisionLabel: string;
@@ -44,6 +46,8 @@ interface AppHeaderBarProps {
 export default function AppHeaderBar({
   currentView,
   connected,
+  reconnectAttempt = 0,
+  networkOnline = true,
   viewTitle,
   tasksPrimaryLabel,
   decisionLabel,
@@ -308,9 +312,25 @@ export default function AppHeaderBar({
             </>
           )}
         </div>
-        <div className="flex items-center gap-2 text-xs" style={{ color: "var(--th-text-muted)" }}>
-          <div className={`w-2 h-2 rounded-full ${connected ? "bg-green-500" : "bg-red-500"}`} />
-          <span className="hidden sm:inline">{connected ? "Live" : "Offline"}</span>
+        <div
+          className="flex items-center gap-2 text-xs"
+          style={{ color: "var(--th-text-muted)" }}
+          title={
+            connected
+              ? "Live"
+              : networkOnline
+                ? `Reconnecting (attempt ${reconnectAttempt})`
+                : "No network connection"
+          }
+        >
+          <div
+            className={`w-2 h-2 rounded-full ${
+              connected ? "bg-green-500" : networkOnline ? "bg-yellow-500" : "bg-red-500"
+            }`}
+          />
+          <span className="hidden sm:inline">
+            {connected ? "Live" : networkOnline ? `Reconnecting (${reconnectAttempt})` : "Offline"}
+          </span>
         </div>
       </div>
     </header>

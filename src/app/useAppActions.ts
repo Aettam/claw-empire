@@ -1,6 +1,7 @@
 import { useCallback, useRef } from "react";
 import type { Dispatch, SetStateAction } from "react";
 import * as api from "../api";
+import { diffPatch } from "../api";
 import { buildDecisionInboxItems } from "../components/chat/decision-inbox";
 import type { DecisionInboxItem } from "../components/chat/decision-inbox";
 import { LANGUAGE_USER_SET_STORAGE_KEY, normalizeLanguage, pickLang } from "../i18n";
@@ -245,7 +246,10 @@ export function useAppActions({
         window.localStorage.setItem(LANGUAGE_USER_SET_STORAGE_KEY, "1");
       }
       try {
-        await api.saveSettings(nextSettings);
+        const patch = diffPatch(previousSettings, nextSettings);
+        if (Object.keys(patch).length > 0) {
+          await api.saveSettingsPatch(patch as Record<string, unknown>);
+        }
         if (autoUpdateChanged) {
           try {
             await api.setAutoUpdateEnabled(Boolean(nextSettings.autoUpdateEnabled));
