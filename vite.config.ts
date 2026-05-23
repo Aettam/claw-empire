@@ -37,20 +37,35 @@ const silenceEpipe = (proxy: ProxyLike) => {
 
 const manualChunks = (id: string): string | undefined => {
   if (!id.includes("node_modules")) return undefined;
+
+  // PixiJS — largest dep (~533 KB); deferred via lazy OfficeView
   if (id.includes("/node_modules/@pixi/")) {
     const match = id.match(/\/node_modules\/(@pixi\/[^/]+)\//);
     if (match) return `vendor-${match[1].replace("@pixi/", "pixi-")}`;
   }
   if (id.includes("/node_modules/pixi.js/")) return "vendor-pixi";
+
+  // PowerPoint export — only loaded when feature is used
   if (id.includes("/node_modules/pptxgenjs/")) return "vendor-pptx";
+
+  // Routing
   if (id.includes("/node_modules/react-router-dom/") || id.includes("/node_modules/react-router/"))
     return "vendor-router";
+
+  // React core
   if (
     id.includes("/node_modules/react-dom/") ||
     id.includes("/node_modules/react/") ||
     id.includes("/node_modules/scheduler/")
   )
     return "vendor-react";
+
+  // Icon library — tree-shaken but still sizeable; isolate for long-term caching
+  if (id.includes("/node_modules/lucide-react/")) return "vendor-icons";
+
+  // Schema validation — stable, rarely changes
+  if (id.includes("/node_modules/zod/")) return "vendor-zod";
+
   return undefined;
 };
 

@@ -1,11 +1,17 @@
-import { useCallback, useMemo, type ReactNode } from "react";
+import { lazy, Suspense, useCallback, useMemo, type ReactNode } from "react";
 import Sidebar from "../components/Sidebar";
-import OfficeView from "../components/OfficeView";
-import Dashboard from "../components/Dashboard";
-import TaskBoard from "../components/TaskBoard";
-import AgentManager from "../components/AgentManager";
-import SkillsLibrary from "../components/SkillsLibrary";
-import SettingsPanel from "../components/SettingsPanel";
+
+// ── Route-level lazy chunks ──────────────────────────────────────────────────
+// Each view is split into its own chunk so the initial bundle is lean.
+// PixiJS (533 KB) is deferred until the user first visits the Office view.
+const OfficeView   = lazy(() => import("../components/OfficeView"));
+const Dashboard    = lazy(() => import("../components/Dashboard"));
+const TaskBoard    = lazy(() => import("../components/TaskBoard"));
+const AgentManager = lazy(() => import("../components/AgentManager"));
+const SkillsLibrary = lazy(() => import("../components/SkillsLibrary"));
+const SettingsPanel = lazy(() => import("../components/SettingsPanel"));
+const HermesPanel   = lazy(() => import("../components/HermesPanel"));
+// ─────────────────────────────────────────────────────────────────────────────
 import { I18nProvider } from "../i18n";
 import type {
   Agent,
@@ -469,6 +475,16 @@ export default function AppMainLayout({
           )}
 
           <div className="p-3 sm:p-4 lg:p-6">
+            <Suspense
+              fallback={
+                <div className="flex h-64 items-center justify-center">
+                  <div className="flex flex-col items-center gap-3">
+                    <div className="h-8 w-8 animate-spin rounded-full border-2 border-blue-500 border-t-transparent" />
+                    <div className="text-xs text-slate-500">Loading…</div>
+                  </div>
+                </div>
+              }
+            >
             {view === "office" && (
               <OfficeView
                 departments={officePresentation.departments}
@@ -541,6 +557,8 @@ export default function AppMainLayout({
 
             {view === "skills" && <SkillsLibrary agents={agents} />}
 
+            {view === "hermes" && <HermesPanel />}
+
             {view === "settings" && (
               <SettingsPanel
                 settings={settings}
@@ -555,6 +573,7 @@ export default function AppMainLayout({
                 onOauthResultClear={onOauthResultClear}
               />
             )}
+            </Suspense>
           </div>
         </main>
 

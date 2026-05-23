@@ -1,4 +1,7 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useState, useRef } from "react";
+
+/** Max task cards rendered per column before virtualizing */
+const COLUMN_RENDER_LIMIT = 40;
 import { bulkHideTasks } from "../api";
 import { useI18n } from "../i18n";
 import type { Agent, Department, SubTask, Task, WorkflowPackKey } from "../types";
@@ -60,6 +63,9 @@ export function TaskBoard({
   const [showCreate, setShowCreate] = useState(false);
   const [showProjectManager, setShowProjectManager] = useState(false);
   const [showBulkHideModal, setShowBulkHideModal] = useState(false);
+  // Track how many tasks each column has expanded beyond the render limit
+  const [expandedColumns, setExpandedColumns] = useState<Record<string, number>>({});
+  const columnSentinelRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [filterDept, setFilterDept] = useState("");
   const [filterAgent, setFilterAgent] = useState("");
   const [filterType, setFilterType] = useState("");
@@ -238,6 +244,11 @@ export function TaskBoard({
       <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pb-2 sm:flex-row sm:overflow-x-auto sm:overflow-y-hidden">
         {COLUMNS.map((column) => {
           const columnTasks = tasksByStatus[column.status] ?? [];
+          const extraVisible = expandedColumns[column.status] ?? 0;
+          const renderLimit = COLUMN_RENDER_LIMIT + extraVisible;
+          const visibleTasks = columnTasks.slice(0, renderLimit);
+          const hiddenCount = columnTasks.length - visibleTasks.length;
+
           return (
             <div
               key={column.status}
@@ -261,29 +272,45 @@ export function TaskBoard({
                     {t({ ko: "업무 없음", en: "No tasks", ja: "タスクなし", zh: "暂无任务" })}
                   </div>
                 ) : (
-                  columnTasks.map((task) => (
-                    <TaskCard
-                      key={task.id}
-                      task={task}
-                      agents={agents}
-                      departments={departments}
-                      taskSubtasks={subtasksByTask[task.id] ?? []}
-                      isHiddenTask={hiddenTaskIds.has(task.id)}
-                      onUpdateTask={onUpdateTask}
-                      onDeleteTask={onDeleteTask}
-                      onAssignTask={onAssignTask}
-                      onRunTask={onRunTask}
-                      onStopTask={onStopTask}
-                      onPauseTask={onPauseTask}
-                      onResumeTask={onResumeTask}
-                      onOpenTerminal={onOpenTerminal}
-                      onOpenMeetingMinutes={onOpenMeetingMinutes}
-                      onMergeTask={onMergeTask}
-                      onDiscardTask={onDiscardTask}
-                      onHideTask={hideTask}
-                      onUnhideTask={unhideTask}
-                    />
-                  ))
+                  <>
+                    {visibleTasks.map((task) => (
+                      <TaskCard
+                        key={task.id}
+                        task={task}
+                        agents={agents}
+                        departments={departments}
+                        taskSubtasks={subtasksByTask[task.id] ?? []}
+                        isHiddenTask={hiddenTaskIds.has(task.id)}
+                        onUpdateTask={onUpdateTask}
+                        onDeleteTask={onDeleteTask}
+                        onAssignTask={onAssignTask}
+                        onRunTask={onRunTask}
+                        onStopTask={onStopTask}
+                        onPauseTask={onPauseTask}
+                        onResumeTask={onResumeTask}
+                        onOpenTerminal={onOpenTerminal}
+                        onOpenMeetingMinutes={onOpenMeetingMinutes}
+                        onMergeTask={onMergeTask}
+                        onDiscardTask={onDiscardTask}
+                        onHideTask={hideTask}
+                        onUnhideTask={unhideTask}
+                      />
+                    ))}
+                    {hiddenCount > 0 && (
+                      <button
+                        ref={(el) => { columnSentinelRefs.current[column.status] = el; }}
+                        onClick={() =>
+                          setExpandedColumns((prev) => ({
+                            ...prev,
+                            [column.status]: (prev[column.status] ?? 0) + COLUMN_RENDER_LIMIT,
+                          }))
+                        }
+                        className="mt-1 rounded-lg border border-slate-700/60 py-2 text-xs text-slate-400 transition hover:bg-slate-800 hover:text-slate-200"
+                      >
+                        {t({ ko: `+${hiddenCount}개 더 보기`, en: `Show ${hiddenCount} more`, ja: `さらに${hiddenCount}件`, zh: `显示更多 ${hiddenCount}` })}
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             </div>

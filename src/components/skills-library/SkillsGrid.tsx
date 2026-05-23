@@ -1,4 +1,4 @@
-import type { MutableRefObject } from "react";
+import { useEffect, useRef, useState, type MutableRefObject } from "react";
 import type { SkillDetail, SkillHistoryProvider } from "../../api";
 import type { Agent } from "../../types";
 import AgentAvatar from "../AgentAvatar";
@@ -14,6 +14,8 @@ import {
   type CategorizedSkill,
   type TFunction,
 } from "./model";
+
+const PAGE_SIZE = 60; // skills rendered per incremental batch
 
 interface SkillsGridProps {
   t: TFunction;
@@ -52,10 +54,39 @@ export default function SkillsGrid({
   onOpenLearningModal,
   onCopy,
 }: SkillsGridProps) {
+  // ── Incremental rendering ─────────────────────────────────────────────────
+  // Render skills in pages. An IntersectionObserver sentinel at the bottom
+  // loads the next page automatically, keeping the DOM lean for 600+ skills.
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  // Reset visible count when the filtered list changes (search / category switch)
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [filtered]);
+
+  useEffect(() => {
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount((prev) => Math.min(prev + PAGE_SIZE, filtered.length));
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [filtered.length]);
+
+  const visibleSkills = filtered.slice(0, visibleCount);
+  // ─────────────────────────────────────────────────────────────────────────
+
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">
-        {filtered.map((skill) => {
+        {visibleSkills.map((skill, skillIdx) => {
           const badge = getRankBadge(skill.rank);
           const catColor = CATEGORY_COLORS[skill.category] || CATEGORY_COLORS.Other;
           const detailId = skill.skillId || skill.name;
@@ -68,7 +99,14 @@ export default function SkillsGrid({
           return (
             <div
               key={`${skill.rank}-${detailId}`}
-              className="relative bg-slate-800/50 border border-slate-700/40 rounded-xl p-4 hover:bg-slate-800/70 hover:border-slate-600/50 transition-all group"
+              className="relative bg-slate-800/50 border border-slate-700/40 rounded-xl p-4 hover:bg-slate-800/70 hover:border-slate-600/50 hover:scale-[1.01] group"
+              style={{
+                animation: `list-enter var(--motion-duration-slow, 400ms) var(--motion-ease-out, cubic-bezier(0, 0, 0.2, 1)) both`,
+                animationDelay: `${Math.min(skillIdx * 30, 400)}ms`,
+                transition: `transform var(--motion-duration-normal, 250ms) var(--motion-ease-default, ease),
+                             background-color var(--motion-duration-normal, 250ms) var(--motion-ease-default, ease),
+                             border-color var(--motion-duration-normal, 250ms) var(--motion-ease-default, ease)`,
+              }}
               onMouseEnter={() => onHoverEnter(skill)}
               onMouseLeave={onHoverLeave}
             >
@@ -263,6 +301,13 @@ export default function SkillsGrid({
           );
         })}
       </div>
+
+      {/* IntersectionObserver sentinel — triggers next page load */}
+      {visibleCount < filtered.length && (
+        <div ref={sentinelRef} className="flex items-center justify-center py-6">
+          <div className="animate-spin w-5 h-5 border-2 border-blue-500 border-t-transparent rounded-full" />
+        </div>
+      )}
 
       {filtered.length === 0 && (
         <div className="text-center py-16">
