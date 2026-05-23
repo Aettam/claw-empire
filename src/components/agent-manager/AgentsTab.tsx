@@ -122,7 +122,7 @@ export default function AgentsTab({
             placeholder={`${tr("검색", "Search")}...`}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="px-3 py-1.5 rounded-lg text-xs outline-none focus:ring-2 focus:ring-blue-500/40 transition-shadow w-36"
+            className="px-3 py-1.5 rounded-lg text-xs outline-none focus:ring-2 transition-shadow w-36"
             style={{
               background: "var(--th-input-bg)",
               border: "1px solid var(--th-input-border)",
@@ -139,7 +139,7 @@ export default function AgentsTab({
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-          {sortedAgents.map((agent) => (
+          {sortedAgents.map((agent, index) => (
             <AgentCard
               key={agent.id}
               agent={agent}
@@ -154,6 +154,7 @@ export default function AgentsTab({
               onDeleteConfirm={() => onDeleteAgent(agent.id)}
               onDeleteCancel={() => setConfirmDeleteId(null)}
               saving={saving}
+              staggerIndex={index}
             />
           ))}
         </div>

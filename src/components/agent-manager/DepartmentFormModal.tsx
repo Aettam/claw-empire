@@ -201,14 +201,14 @@ export default function DepartmentFormModal({
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      className="animate-modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4"
       style={{ background: "var(--th-modal-overlay)" }}
       onClick={(e) => {
         if (e.target === overlayRef.current) onClose();
       }}
     >
       <div
-        className="w-full max-w-lg rounded-2xl p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 max-h-[85vh] overflow-y-auto"
+        className="animate-modal-enter scroll-fade-y w-full max-w-lg rounded-2xl p-6 shadow-2xl max-h-[85vh] overflow-y-auto"
         style={{
           background: "var(--th-card-bg)",
           border: "1px solid var(--th-card-border)",
@@ -217,7 +217,7 @@ export default function DepartmentFormModal({
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-5">
-          <h3 className="text-base font-bold flex items-center gap-2" style={{ color: "var(--th-text-heading)" }}>
+          <h3 className="font-bold flex items-center gap-2" style={{ color: "var(--th-text-heading)", fontSize: "var(--th-text-base)", lineHeight: "var(--th-leading-base)" }}>
             <span className="text-lg">{form.icon}</span>
             {isEdit ? tr("부서 정보 수정", "Edit Department") : tr("신규 부서 추가", "Add Department")}
           </h3>

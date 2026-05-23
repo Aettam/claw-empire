@@ -54,12 +54,12 @@ export default function BulkHideModal({ tasks, hiddenTaskIds, onClose, onApply }
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+      className="animate-modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
       onClick={(event) => event.target === event.currentTarget && onClose()}
     >
-      <div className="w-full max-w-sm rounded-2xl border border-slate-700 bg-slate-900 p-5 shadow-2xl">
+      <div className="animate-modal-enter w-full max-w-sm rounded-2xl border border-slate-700 bg-slate-900 p-5 shadow-2xl">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-base font-bold text-white">
+          <h2 className="font-bold text-white" style={{ fontSize: "var(--th-text-base)", lineHeight: "var(--th-leading-base)" }}>
             {t({
               ko: "숨길 상태 선택",
               en: "Select statuses to hide",

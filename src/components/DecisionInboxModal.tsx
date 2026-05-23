@@ -213,15 +213,15 @@ export default function DecisionInboxModal({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={onClose}>
+    <div className="animate-modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm" onClick={onClose}>
       <div
-        className="relative mx-4 w-full max-w-3xl rounded-2xl border border-indigo-500/30 bg-slate-900 shadow-2xl shadow-indigo-500/10"
+        className="animate-modal-enter relative mx-4 w-full max-w-3xl rounded-2xl border border-indigo-500/30 bg-slate-900 shadow-2xl shadow-indigo-500/10"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-slate-700/50 px-6 py-4">
           <div className="flex items-center gap-3">
             <span className="text-2xl">🧭</span>
-            <h2 className="text-lg font-bold text-white">
+            <h2 className="font-bold text-white" style={{ fontSize: "var(--th-text-lg)", lineHeight: "var(--th-leading-lg)" }}>
               {t({ ko: "미결 의사결정", en: "Pending Decisions", ja: "未決の意思決定", zh: "待处理决策" })}
             </h2>
             <span className="rounded-full bg-indigo-500/20 px-2 py-0.5 text-xs font-medium text-indigo-300">
@@ -244,7 +244,7 @@ export default function DecisionInboxModal({
           </div>
         </div>
 
-        <div className="max-h-[70vh] overflow-y-auto p-4">
+        <div className="scroll-fade-y max-h-[70vh] overflow-y-auto p-4">
           {loading ? (
             <div className="py-12 text-center text-sm text-slate-500">
               {t({
@@ -265,8 +265,15 @@ export default function DecisionInboxModal({
             </div>
           ) : (
             <div className="space-y-3">
-              {items.map((item) => (
-                <div key={item.id} className="rounded-xl border border-slate-700/60 bg-slate-800/50 p-3">
+              {items.map((item, itemIdx) => (
+                <div
+                  key={item.id}
+                  className="rounded-xl border border-slate-700/60 bg-slate-800/50 p-3"
+                  style={{
+                    animation: `list-enter var(--motion-duration-slow, 400ms) var(--motion-ease-bounce, cubic-bezier(0.34, 1.56, 0.64, 1)) both`,
+                    animationDelay: `${Math.min(itemIdx * 60, 400)}ms`,
+                  }}
+                >
                   <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
                     {(() => {
                       const agent = item.agentId ? agentById.get(item.agentId) : undefined;
@@ -277,6 +284,7 @@ export default function DecisionInboxModal({
                               agent={agent}
                               spriteMap={spriteMap}
                               size={32}
+                              showTooltip
                               className="mt-0.5 border border-slate-600 bg-slate-900"
                             />
                           ) : (
