@@ -3,11 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0a18" />
     <title>Claw-Empire - AI Agent Company Simulation</title>
     <link rel="icon" type="image/svg+xml" href="/claw-empire.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="preload" as="image" href="/sprites/ceo-lobster.png" />
     <link rel="preload" as="image" href="/sprites/3-D-1.png" />
     <link rel="preload" as="image" href="/sprites/8-D-1.png" />
+    <!--
+      Sprite size audit (Round-3 perf pass):
+        Above-200 KB sprites that should be re-encoded by a future asset pipeline
+        (WebP/AVIF + size-variants). They are background/secondary characters,
+        not above-the-fold UI, so they're served at fetchpriority="low" today:
+          - /sprites/13-R-1.png  (~1.2 MB)
+          - /sprites/14-D-1.png  (~1.16 MB)
+          - /sprites/14-D-2.png  (~1.16 MB)
+          - /sprites/14-D-3.png  (~1.16 MB)
+          - /sprites/14-L-1.png  (~1.16 MB)
+          - /sprites/14-R-1.png  (~1.16 MB)
+        Target: <100 KB per frame via WebP @ q=80 or AVIF @ q=50.
+    -->
   </head>
   <body class="bg-slate-900 text-white">
     <div id="root"></div>

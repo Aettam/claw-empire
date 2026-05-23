@@ -1,0 +1,35 @@
+{
+  "name": "Claw-Empire — AI Agent Company Simulation",
+  "short_name": "Claw-Empire",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0a0a18",
+  "theme_color": "#0a0a18",
+  "icons": [
+    {
+      "src": "/sprites/ceo-lobster.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/sprites/ceo-lobster.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/claw-empire.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/claw-empire.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

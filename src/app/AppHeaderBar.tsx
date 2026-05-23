@@ -312,7 +312,9 @@ export default function AppHeaderBar({
             </>
           )}
         </div>
-        <div
+        <span
+          role="status"
+          aria-live="polite"
           className="flex items-center gap-2 text-xs"
           style={{ color: "var(--th-text-muted)" }}
           title={
@@ -323,15 +325,23 @@ export default function AppHeaderBar({
                 : "No network connection"
           }
         >
-          <div
+          <span
+            aria-hidden="true"
             className={`w-2 h-2 rounded-full ${
               connected ? "bg-green-500" : networkOnline ? "bg-yellow-500" : "bg-red-500"
             }`}
           />
-          <span className="hidden sm:inline">
+          <span className="sr-only">
+            {connected
+              ? "Connection status: live"
+              : networkOnline
+                ? `Connection status: reconnecting, attempt ${reconnectAttempt}`
+                : "Connection status: offline"}
+          </span>
+          <span className="hidden sm:inline" aria-hidden="true">
             {connected ? "Live" : networkOnline ? `Reconnecting (${reconnectAttempt})` : "Offline"}
           </span>
-        </div>
+        </span>
       </div>
     </header>
   );

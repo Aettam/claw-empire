@@ -1,4 +1,4 @@
-import { memo, useMemo, useState } from "react";
+import { memo, useId, useMemo, useState } from "react";
 import type { CSSProperties } from "react";
 import type { Agent } from "../types";
 
@@ -69,20 +69,25 @@ function AgentAvatar({
   const map = spriteMap ?? (agents ? buildSpriteMap(agents) : new Map());
   const spriteNum = resolveSpriteNum(agent, map);
   const [hovered, setHovered] = useState(false);
+  const tooltipId = useId();
 
   const roundedClass = rounded === "full" ? "rounded-full" : rounded === "xl" ? "rounded-xl" : "rounded-2xl";
   const tooltipName = agent?.name ?? "";
+  const tooltipVisible = showTooltip && hovered && !!tooltipName;
 
   const wrapperProps = showTooltip
     ? {
         onMouseEnter: () => setHovered(true),
         onMouseLeave: () => setHovered(false),
         style: { position: "relative" as const },
+        "aria-describedby": tooltipVisible ? tooltipId : undefined,
       }
     : {};
 
-  const tooltip = showTooltip && tooltipName ? (
+  const tooltip = tooltipVisible ? (
     <span
+      id={tooltipId}
+      role="tooltip"
       style={{
         position: "absolute",
         bottom: "calc(100% + 6px)",
@@ -98,7 +103,6 @@ function AgentAvatar({
         color: "var(--th-text-heading, #f1f5f9)",
         border: "1px solid var(--th-border, rgba(50,50,95,0.45))",
         boxShadow: "0 4px 12px var(--th-glass-shadow, rgba(0,0,0,0.5))",
-        opacity: hovered ? 1 : 0,
         transition: `opacity var(--motion-duration-fast, 150ms) var(--motion-ease-default, ease)`,
         zIndex: 50,
       }}
@@ -106,6 +110,8 @@ function AgentAvatar({
       {tooltipName}
     </span>
   ) : null;
+
+  const lowPriority = spriteNum === 13 || spriteNum === 14;
 
   if (spriteNum) {
     return (
@@ -119,6 +125,8 @@ function AgentAvatar({
             alt={agent?.name ?? ""}
             className={`w-full h-full ${imageFit === "contain" ? "object-contain" : "object-cover"}`}
             style={{ imageRendering: "pixelated", objectPosition: imagePosition }}
+            fetchPriority={lowPriority ? "low" : undefined}
+            loading={lowPriority ? "lazy" : undefined}
           />
         </div>
         {tooltip}

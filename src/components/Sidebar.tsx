@@ -89,30 +89,35 @@ export default function Sidebar({ currentView, onChangeView, departments, agents
 
       {/* Navigation */}
       <nav className="flex-1 py-2 space-y-0.5 px-2">
-        {NAV_ITEMS.map((item) => (
-          <button
-            key={item.view}
-            onClick={() => onChangeView(item.view)}
-            onMouseEnter={() => PREFETCH_MAP[item.view]?.()}
-            className={`sidebar-nav-item ${
-              currentView === item.view ? "active font-semibold shadow-sm shadow-blue-500/10" : ""
-            }`}
-          >
-            <span className="text-base shrink-0">
-              {item.sprite ? (
-                <img
-                  src={item.sprite}
-                  alt=""
-                  className="w-5 h-5 object-cover rounded-full"
-                  style={{ imageRendering: "pixelated" }}
-                />
-              ) : (
-                item.icon
-              )}
-            </span>
-            {!collapsed && <span>{navLabels[item.view]}</span>}
-          </button>
-        ))}
+        {NAV_ITEMS.map((item) => {
+          const isActive = currentView === item.view;
+          return (
+            <button
+              key={item.view}
+              onClick={() => onChangeView(item.view)}
+              onMouseEnter={() => PREFETCH_MAP[item.view]?.()}
+              aria-current={isActive ? "page" : undefined}
+              aria-label={collapsed ? navLabels[item.view] : undefined}
+              className={`sidebar-nav-item ${
+                isActive ? "active font-semibold shadow-sm shadow-blue-500/10" : ""
+              }`}
+            >
+              <span className="text-base shrink-0">
+                {item.sprite ? (
+                  <img
+                    src={item.sprite}
+                    alt=""
+                    className="w-5 h-5 object-cover rounded-full"
+                    style={{ imageRendering: "pixelated" }}
+                  />
+                ) : (
+                  item.icon
+                )}
+              </span>
+              {!collapsed && <span>{navLabels[item.view]}</span>}
+            </button>
+          );
+        })}
       </nav>
 
       {/* Department quick stats */}
