@@ -96,24 +96,30 @@ function AppHeaderBar({
         >
           {currentView === "agents" && (
             <span className="relative inline-flex items-center" style={{ width: 30, height: 22 }}>
-              <img
-                src="/sprites/8-D-1.png"
-                alt=""
-                width={20}
-                height={20}
-                loading="lazy"
-                className="absolute left-0 top-0 w-5 h-5 rounded-full object-cover"
-                style={{ imageRendering: "pixelated", opacity: 0.85 }}
-              />
-              <img
-                src="/sprites/3-D-1.png"
-                alt=""
-                width={20}
-                height={20}
-                loading="lazy"
-                className="absolute left-2.5 top-0.5 w-5 h-5 rounded-full object-cover"
-                style={{ imageRendering: "pixelated", zIndex: 1 }}
-              />
+              <picture>
+                <source srcSet="/sprites/8-D-1.webp" type="image/webp" />
+                <img
+                  src="/sprites/8-D-1.png"
+                  alt=""
+                  width={20}
+                  height={20}
+                  loading="lazy"
+                  className="absolute left-0 top-0 w-5 h-5 rounded-full object-cover"
+                  style={{ imageRendering: "pixelated", opacity: 0.85 }}
+                />
+              </picture>
+              <picture>
+                <source srcSet="/sprites/3-D-1.webp" type="image/webp" />
+                <img
+                  src="/sprites/3-D-1.png"
+                  alt=""
+                  width={20}
+                  height={20}
+                  loading="lazy"
+                  className="absolute left-2.5 top-0.5 w-5 h-5 rounded-full object-cover"
+                  style={{ imageRendering: "pixelated", zIndex: 1 }}
+                />
+              </picture>
             </span>
           )}
           <span className="truncate">{viewTitle}</span>

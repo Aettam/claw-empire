@@ -120,16 +120,19 @@ function AgentAvatar({
           className={`${roundedClass} overflow-hidden bg-gray-700 flex-shrink-0 ${className}`}
           style={{ width: size, height: size }}
         >
-          <img
-            src={`/sprites/${spriteNum}-D-1.png`}
-            alt={agent?.name ?? ""}
-            width={size}
-            height={size}
-            className={`w-full h-full ${imageFit === "contain" ? "object-contain" : "object-cover"}`}
-            style={{ imageRendering: "pixelated", objectPosition: imagePosition }}
-            fetchPriority={lowPriority ? "low" : undefined}
-            loading={lowPriority ? "lazy" : undefined}
-          />
+          <picture>
+            <source srcSet={`/sprites/${spriteNum}-D-1.webp`} type="image/webp" />
+            <img
+              src={`/sprites/${spriteNum}-D-1.png`}
+              alt={agent?.name ?? ""}
+              width={size}
+              height={size}
+              className={`w-full h-full ${imageFit === "contain" ? "object-contain" : "object-cover"}`}
+              style={{ imageRendering: "pixelated", objectPosition: imagePosition }}
+              fetchPriority={lowPriority ? "low" : undefined}
+              loading={lowPriority ? "lazy" : undefined}
+            />
+          </picture>
         </div>
         {tooltip}
       </div>

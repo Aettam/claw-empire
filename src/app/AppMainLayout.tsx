@@ -1,4 +1,5 @@
 import { lazy, Suspense, useCallback, useMemo, type ReactNode } from "react";
+import ErrorBoundary from "../components/ErrorBoundary";
 import Sidebar from "../components/Sidebar";
 
 // ── Route-level lazy chunks ──────────────────────────────────────────────────
@@ -494,6 +495,7 @@ export default function AppMainLayout({
           )}
 
           <div className="p-3 sm:p-4 lg:p-6">
+            <ErrorBoundary key={view}>
             <Suspense
               fallback={
                 <div className="flex h-64 items-center justify-center">
@@ -593,6 +595,7 @@ export default function AppMainLayout({
               />
             )}
             </Suspense>
+            </ErrorBoundary>
           </div>
         </main>
 

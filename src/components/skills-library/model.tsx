@@ -1,6 +1,7 @@
 import type { SkillEntry, SkillHistoryProvider, SkillLearnJob, SkillLearnProvider } from "../../api";
 import type { UiLanguage } from "../../i18n";
 import type { Agent, AgentRole } from "../../types";
+import { cachedDateTimeFormat, cachedNumberFormat } from "../../utils/intl-cache";
 
 export interface CategorizedSkill extends SkillEntry {
   category: string;
@@ -175,7 +176,7 @@ export function categorize(name: string, repo: string): string {
 }
 
 export function formatInstalls(n: number, localeTag: string): string {
-  return new Intl.NumberFormat(localeTag, {
+  return cachedNumberFormat(localeTag, {
     notation: n >= 1000 ? "compact" : "standard",
     maximumFractionDigits: 1,
   }).format(n);
@@ -269,7 +270,7 @@ export function formatFirstSeen(value: string, localeTag: string): string {
   if (!value) return value;
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) return value;
-  return new Intl.DateTimeFormat(localeTag, {
+  return cachedDateTimeFormat(localeTag, {
     year: "numeric",
     month: "short",
     day: "numeric",

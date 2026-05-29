@@ -1,5 +1,6 @@
 import type { SkillHistoryProvider, SkillLearnProvider } from "../../api";
 import type { Agent } from "../../types";
+import { cachedDateTimeFormat } from "../../utils/intl-cache";
 import AgentAvatar from "../AgentAvatar";
 import {
   learningStatusLabel,
@@ -265,7 +266,7 @@ export default function LearningModal({
 
               {learnJob?.completedAt && (
                 <div className="text-[11px] text-slate-500">
-                  {new Intl.DateTimeFormat(localeTag, {
+                  {cachedDateTimeFormat(localeTag, {
                     hour: "2-digit",
                     minute: "2-digit",
                     second: "2-digit",

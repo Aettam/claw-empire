@@ -66,14 +66,17 @@ function Sidebar({ currentView, onChangeView, departments, agents, settings, con
           className="flex items-center gap-2 hover:opacity-80 transition-opacity"
         >
           <div className="w-9 h-9 rounded-lg flex items-center justify-center shrink-0 relative overflow-visible">
-            <img
-              src="/sprites/ceo-lobster.png"
-              alt={tr("CEO", "CEO")}
-              width={32}
-              height={32}
-              className="w-8 h-8 object-contain"
-              style={{ imageRendering: "pixelated" }}
-            />
+            <picture>
+              <source srcSet="/sprites/ceo-lobster.webp" type="image/webp" />
+              <img
+                src="/sprites/ceo-lobster.png"
+                alt={tr("CEO", "CEO")}
+                width={32}
+                height={32}
+                className="w-8 h-8 object-contain"
+                style={{ imageRendering: "pixelated" }}
+              />
+            </picture>
             <span className="absolute -top-0.5 left-1/2 -translate-x-1/2 text-[10px] leading-none drop-shadow">👑</span>
           </div>
           {!collapsed && (
@@ -106,14 +109,17 @@ function Sidebar({ currentView, onChangeView, departments, agents, settings, con
             >
               <span className="text-base shrink-0">
                 {item.sprite ? (
-                  <img
-                    src={item.sprite}
-                    alt=""
-                    width={20}
-                    height={20}
-                    className="w-5 h-5 object-cover rounded-full"
-                    style={{ imageRendering: "pixelated" }}
-                  />
+                  <picture>
+                    <source srcSet={item.sprite.replace(".png", ".webp")} type="image/webp" />
+                    <img
+                      src={item.sprite}
+                      alt=""
+                      width={20}
+                      height={20}
+                      className="w-5 h-5 object-cover rounded-full"
+                      style={{ imageRendering: "pixelated" }}
+                    />
+                  </picture>
                 ) : (
                   item.icon
                 )}

@@ -1,6 +1,7 @@
 import type { RefObject } from "react";
 import type { Agent, Message } from "../../types";
 import type { DecisionOption } from "../chat/decision-request";
+import { cachedDateTimeFormat } from "../../utils/intl-cache";
 import AgentAvatar from "../AgentAvatar";
 import MessageContent from "../MessageContent";
 
@@ -31,7 +32,7 @@ interface ChatMessageListProps {
 }
 
 function formatTime(ts: number, locale: string): string {
-  return new Intl.DateTimeFormat(locale, {
+  return cachedDateTimeFormat(locale, {
     hour: "2-digit",
     minute: "2-digit",
   }).format(new Date(ts));

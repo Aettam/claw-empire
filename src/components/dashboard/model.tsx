@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type { UiLanguage } from "../../i18n";
+import { cachedRelativeTimeFormat } from "../../utils/intl-cache";
 
 export type Locale = UiLanguage;
 export type TFunction = (messages: Record<Locale, string>) => string;
@@ -39,7 +40,7 @@ export function useNow(localeTag: string, t: TFunction) {
 
 export function timeAgo(timestamp: number, localeTag: string): string {
   const seconds = Math.floor((Date.now() - timestamp) / 1000);
-  const relativeTimeFormat = new Intl.RelativeTimeFormat(localeTag, { numeric: "auto" });
+  const relativeTimeFormat = cachedRelativeTimeFormat(localeTag, { numeric: "auto" });
   if (seconds < 60) return relativeTimeFormat.format(-seconds, "second");
   const minutes = Math.floor(seconds / 60);
   if (minutes < 60) return relativeTimeFormat.format(-minutes, "minute");

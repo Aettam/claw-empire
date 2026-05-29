@@ -1,5 +1,6 @@
 import type { TaskStatus, TaskType } from "../../types";
 import type { UiLanguage } from "../../i18n";
+import { cachedRelativeTimeFormat } from "../../utils/intl-cache";
 
 export type Locale = UiLanguage;
 export type TFunction = (messages: Record<Locale, string>) => string;
@@ -247,7 +248,7 @@ export function priorityLabel(priority: number, t: TFunction) {
 
 export function timeAgo(ts: number, localeTag: string): string {
   const diffSec = Math.floor((Date.now() - ts) / 1000);
-  const relativeTimeFormat = new Intl.RelativeTimeFormat(localeTag, { numeric: "auto" });
+  const relativeTimeFormat = cachedRelativeTimeFormat(localeTag, { numeric: "auto" });
   if (diffSec < 60) return relativeTimeFormat.format(-diffSec, "second");
   const diffMin = Math.floor(diffSec / 60);
   if (diffMin < 60) return relativeTimeFormat.format(-diffMin, "minute");

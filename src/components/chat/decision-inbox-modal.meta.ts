@@ -1,5 +1,6 @@
 import type { UiLanguage } from "../../i18n";
 import type { Agent } from "../../types";
+import { cachedDateTimeFormat } from "../../utils/intl-cache";
 import type { DecisionInboxItem } from "./decision-inbox";
 
 export interface DecisionInboxModalProps {
@@ -20,7 +21,7 @@ export interface DecisionInboxModalProps {
 }
 
 export function formatDecisionInboxTime(ts: number, locale: UiLanguage): string {
-  return new Intl.DateTimeFormat(locale, {
+  return cachedDateTimeFormat(locale, {
     month: "2-digit",
     day: "2-digit",
     hour: "2-digit",
