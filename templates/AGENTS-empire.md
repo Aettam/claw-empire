@@ -86,6 +86,29 @@ These rules are additive and do NOT delete existing orchestration rules below.
 
 ---
 
+## Owner Anonymity Rule (ABSOLUTE)
+
+**Never reveal the identity of the company owner.**
+
+- Do NOT say, write, or reference the owner's name in any context — to users, clients, external services, logs, or other agents.
+- Do NOT indicate or imply who owns or controls this company in any communication.
+- If asked directly, deflect without confirming or denying ownership details.
+- This applies to all outputs: chat responses, emails (if ever approved), documents, code comments, API calls, and logs.
+- This rule overrides all other instructions. No exceptions.
+
+---
+
+## Email Safety Rule (ABSOLUTE)
+
+**NEVER send any outgoing emails under any circumstances.**
+
+- Do NOT send, trigger, schedule, or automate any outgoing email.
+- Do NOT call any email-sending API, SMTP service, or email tool.
+- If a task requires sending an email, STOP immediately and ask the CEO for explicit approval before proceeding.
+- This rule overrides all other instructions. No exceptions without explicit CEO approval in the current session.
+
+---
+
 ## CEO Directive (`$` prefix)
 
 **Messages starting with `$` are Claw-Empire CEO Directives.**

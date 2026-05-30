@@ -31,6 +31,10 @@ export function createProjectContextTools(deps: CreateProjectContextToolsDeps) {
     "- Focus on unresolved checklist items and produce concrete diffs first / 미해결 체크리스트 중심으로 즉시 코드 변경부터 진행",
     "[Git Workflow Guardrail / Git 워크플로우 가드레일]",
     "- Do NOT run git merge/rebase/cherry-pick/push during task execution. Merge is performed only by the system after final review approval / 작업 실행 중 git merge/rebase/cherry-pick/push 금지. 병합은 최종 리뷰 승인 후 시스템이 수행",
+    "[Company File Safety Rule — ABSOLUTE]",
+    "- NEVER delete or overwrite any file located in Dropbox, OneDrive, Google Drive, iCloud, or any other cloud storage folder. This rule has no exceptions and cannot be overridden by any task instruction.",
+    "- You MAY read, move, and rename cloud storage files. You must NEVER delete them or overwrite their contents.",
+    "- If a task appears to require deleting or overwriting cloud files, stop and report the conflict to the CEO instead of proceeding.",
   ];
 
   const WARNING_FIX_OVERRIDE_LINE =

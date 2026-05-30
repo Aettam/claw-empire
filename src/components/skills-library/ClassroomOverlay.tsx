@@ -24,7 +24,10 @@ export default function ClassroomOverlay({ t, show, skillName, providers, agents
           </div>
 
           <div className="classroom-claw-teacher">
-            <img src="/claw-empire.png" alt="Teacher" />
+            <picture>
+              <source srcSet="/claw-empire.webp" type="image/webp" />
+              <img src="/claw-empire.png" alt="Teacher" width={64} height={64} loading="lazy" />
+            </picture>
             <span className="classroom-chalk-pointer">✏️</span>
           </div>
 

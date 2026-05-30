@@ -385,6 +385,38 @@ export default function App() {
     [activePackKey, activePackProfile?.agents, agents],
   );
 
+  const handleCrossDeptDeliveryProcessed = useCallback(
+    (id: string) => setCrossDeptDeliveries((prev) => prev.filter((d) => d.id !== id)),
+    [],
+  );
+  const handleCeoOfficeCallProcessed = useCallback(
+    (id: string) => setCeoOfficeCalls((prev) => prev.filter((d) => d.id !== id)),
+    [],
+  );
+  const handleOpenTerminal = useCallback(
+    (taskId: string) => setTaskPanel({ taskId, tab: "terminal" }),
+    [],
+  );
+  const handleOpenMeetingMinutes = useCallback(
+    (taskId: string) => setTaskPanel({ taskId, tab: "minutes" }),
+    [],
+  );
+  const handleCloseChat = useCallback(() => setShowChat(false), []);
+  const handleCloseDecisionInbox = useCallback(() => setShowDecisionInbox(false), []);
+  const handleCloseSelectedAgent = useCallback(() => setSelectedAgent(null), []);
+  const handleCloseTaskPanel = useCallback(() => setTaskPanel(null), []);
+  const handleCloseTaskReport = useCallback(() => setTaskReport(null), []);
+  const handleCloseReportHistory = useCallback(() => setShowReportHistory(false), []);
+  const handleCloseAgentStatus = useCallback(() => setShowAgentStatus(false), []);
+  const handleCloseRoomManager = useCallback(() => {
+    setShowRoomManager(false);
+    setActiveRoomThemeTargetId(null);
+  }, []);
+  const handleOpenAgentStatus = useCallback(() => setShowAgentStatus(true), []);
+  const handleOpenReportHistory = useCallback(() => setShowReportHistory(true), []);
+  const handleOpenRoomManager = useCallback(() => setShowRoomManager(true), []);
+  const handleOauthResultClear = useCallback(() => setOauthResult(null), []);
+
   if (loading) {
     return (
       <AppLoadingScreen language={labels.uiLanguage} title={labels.loadingTitle} subtitle={labels.loadingSubtitle} />
@@ -423,9 +455,9 @@ export default function App() {
       ceoOfficeCalls={ceoOfficeCalls}
       customRoomThemes={customRoomThemes}
       activeRoomThemeTargetId={activeRoomThemeTargetId}
-      onCrossDeptDeliveryProcessed={(id) => setCrossDeptDeliveries((prev) => prev.filter((d) => d.id !== id))}
-      onCeoOfficeCallProcessed={(id) => setCeoOfficeCalls((prev) => prev.filter((d) => d.id !== id))}
-      onOpenActiveMeetingMinutes={(taskId) => setTaskPanel({ taskId, tab: "minutes" })}
+      onCrossDeptDeliveryProcessed={handleCrossDeptDeliveryProcessed}
+      onCeoOfficeCallProcessed={handleCeoOfficeCallProcessed}
+      onOpenActiveMeetingMinutes={handleOpenMeetingMinutes}
       onSelectAgent={setSelectedAgent}
       onSelectDepartment={(department) => {
         const candidateAgents = overlayAgents;
@@ -446,19 +478,19 @@ export default function App() {
       onStopTask={actions.handleStopTask}
       onPauseTask={actions.handlePauseTask}
       onResumeTask={actions.handleResumeTask}
-      onOpenTerminal={(taskId) => setTaskPanel({ taskId, tab: "terminal" })}
-      onOpenMeetingMinutes={(taskId) => setTaskPanel({ taskId, tab: "minutes" })}
+      onOpenTerminal={handleOpenTerminal}
+      onOpenMeetingMinutes={handleOpenMeetingMinutes}
       onAgentsChange={actions.handleAgentsChange}
       activeOfficeWorkflowPack={settings.officeWorkflowPack ?? "development"}
       onChangeOfficeWorkflowPack={handleOfficeWorkflowPackChange}
       onSaveSettings={actions.handleSaveSettings}
       onRefreshCli={actions.handleRefreshCli}
-      onOauthResultClear={() => setOauthResult(null)}
+      onOauthResultClear={handleOauthResultClear}
       onOpenDecisionInbox={actions.handleOpenDecisionInbox}
-      onOpenAgentStatus={() => setShowAgentStatus(true)}
-      onOpenReportHistory={() => setShowReportHistory(true)}
+      onOpenAgentStatus={handleOpenAgentStatus}
+      onOpenReportHistory={handleOpenReportHistory}
       onOpenAnnouncement={actions.handleOpenAnnouncement}
-      onOpenRoomManager={() => setShowRoomManager(true)}
+      onOpenRoomManager={handleOpenRoomManager}
       onDismissAutoUpdateNotice={actions.handleDismissAutoUpdateNotice}
       onDismissUpdate={() => {
         const latest = labels.effectiveUpdateStatus?.latest_version ?? "";
@@ -479,13 +511,13 @@ export default function App() {
         onSendAnnouncement={actions.handleSendAnnouncement}
         onSendDirective={actions.handleSendDirective}
         onClearMessages={actions.handleClearMessages}
-        onCloseChat={() => setShowChat(false)}
+        onCloseChat={handleCloseChat}
         showDecisionInbox={showDecisionInbox}
         decisionInboxLoading={decisionInboxLoading}
         decisionInboxItems={decisionInboxItems}
         decisionReplyBusyKey={decisionReplyBusyKey}
         uiLanguage={labels.uiLanguage}
-        onCloseDecisionInbox={() => setShowDecisionInbox(false)}
+        onCloseDecisionInbox={handleCloseDecisionInbox}
         onRefreshDecisionInbox={() => {
           void actions.loadDecisionInbox();
         }}
@@ -497,7 +529,7 @@ export default function App() {
         tasks={tasks}
         subAgents={subAgents}
         subtasks={subtasks}
-        onCloseSelectedAgent={() => setSelectedAgent(null)}
+        onCloseSelectedAgent={handleCloseSelectedAgent}
         onChatFromAgentDetail={(agent) => {
           setSelectedAgent(null);
           actions.handleOpenChat(agent);
@@ -538,13 +570,13 @@ export default function App() {
             .catch(console.error);
         }}
         taskPanel={taskPanel}
-        onCloseTaskPanel={() => setTaskPanel(null)}
+        onCloseTaskPanel={handleCloseTaskPanel}
         taskReport={taskReport}
-        onCloseTaskReport={() => setTaskReport(null)}
+        onCloseTaskReport={handleCloseTaskReport}
         showReportHistory={showReportHistory}
-        onCloseReportHistory={() => setShowReportHistory(false)}
+        onCloseReportHistory={handleCloseReportHistory}
         showAgentStatus={showAgentStatus}
-        onCloseAgentStatus={() => setShowAgentStatus(false)}
+        onCloseAgentStatus={handleCloseAgentStatus}
         showRoomManager={showRoomManager}
         roomManagerDepartments={labels.roomManagerDepartments}
         customRoomThemes={customRoomThemes}
@@ -561,10 +593,7 @@ export default function App() {
             console.error("Save room themes failed:", error);
           });
         }}
-        onCloseRoomManager={() => {
-          setShowRoomManager(false);
-          setActiveRoomThemeTargetId(null);
-        }}
+        onCloseRoomManager={handleCloseRoomManager}
       />
     </AppMainLayout>
   );

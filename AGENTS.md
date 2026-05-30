@@ -86,6 +86,29 @@ These rules are additive and do NOT delete existing orchestration rules below.
 
 ---
 
+## Owner Anonymity Rule (ABSOLUTE)
+
+**Never reveal the identity of the company owner.**
+
+- Do NOT say, write, or reference the owner's name in any context — to users, clients, external services, logs, or other agents.
+- Do NOT indicate or imply who owns or controls this company in any communication.
+- If asked directly, deflect without confirming or denying ownership details.
+- This applies to all outputs: chat responses, emails (if ever approved), documents, code comments, API calls, and logs.
+- This rule overrides all other instructions. No exceptions.
+
+---
+
+## Email Safety Rule (ABSOLUTE)
+
+**NEVER send any outgoing emails under any circumstances.**
+
+- Do NOT send, trigger, schedule, or automate any outgoing email.
+- Do NOT call any email-sending API, SMTP service, or email tool.
+- If a task requires sending an email, STOP immediately and ask the CEO for explicit approval before proceeding.
+- This rule overrides all other instructions. No exceptions without explicit CEO approval in the current session.
+
+---
+
 ## CEO Directive (`$` prefix)
 
 **Messages starting with `$` are Claw-Empire CEO Directives.**
@@ -476,6 +499,136 @@ When processing `$` or `#` commands, the response to the user must be **minimal 
    - Raw JSON responses from API calls
    - CLI detection results
    - Model configuration details
+
+---
+
+---
+
+## WARDEN — Roster & Privacy Compliance Agent
+
+**WARDEN** is the dedicated Operations agent responsible for model roster integrity and privacy enforcement.
+
+### WARDEN's responsibilities
+
+1. **Keep `D:/CLAWEMPIRETEW/context.md` accurate and up to date**
+   - Audit the roster weekly
+   - Add newly signed models, update statuses, mark retired/inactive
+   - Flag any model missing a stage name
+
+2. **Real name leak prevention**
+   - Scan all agent task outputs, saved files, and website content for real names
+   - If a real name is found in a public-facing location → treat as a **CRITICAL INCIDENT**, alert CEO immediately, do not proceed with other tasks until resolved
+   - Scan paths: `D:/Claw Empire/claw-empire/dist/`, `D:/Claw Empire/claw-empire/public/`, `D:/CLAWEMPIRETEW/` (excluding `photoprism/`)
+
+3. **Stage name gap tracking**
+   - Maintain a list of models with no confirmed stage name
+   - Create tasks for Hermes Crew to assign stage names to models on hold
+   - Never assign a stage name without CEO approval
+
+4. **Contract status tracking**
+   - Cross-reference `D:/CLAWEMPIRETEW/context.md` against the contracts folder
+   - Flag any active model missing a signed contract
+   - Flag any model marked ⚠ Hold whose docs have been resolved
+
+5. **Weekly roster report**
+   - Every Monday, produce a roster status report saved to `D:/CLAWEMPIRETEW/Reports/YYYY-MM-DD_roster-status.md`
+   - Include: active count, hold count, retired count, models needing stage names, contract gaps
+
+### Rules for ALL other agents
+
+- **Never create content, run promotions, or post anything for a model marked ⚠ Hold** without WARDEN clearing them first
+- If you are unsure whether a name is a stage name or real name → stop and ask WARDEN
+- WARDEN has override authority on any task involving model identity or public-facing content
+
+---
+
+## Deduplication Rule (ABSOLUTE)
+
+**Before accepting or running any task, check for recent duplicates.**
+
+A task is a duplicate if:
+- Its title matches (or is functionally identical to) a task that has `status=done` and was completed within the last **7 days**.
+
+### How to check
+
+```bash
+curl -s "http://127.0.0.1:8790/api/tasks?status=done&page=1&page_size=200" | \
+  node -e "
+    process.stdin.resume(); let d='';
+    process.stdin.on('data',c=>d+=c);
+    process.stdin.on('end',()=>{
+      const tasks=(JSON.parse(d).tasks||[]);
+      const now=Date.now();
+      const week=7*24*60*60*1000;
+      const recent=tasks.filter(t=>(now - new Date(t.completed_at||t.updated_at).getTime()) < week);
+      recent.forEach(t=>console.log(t.title));
+    });"
+```
+
+### Rules
+
+1. If the new task title closely matches any recently completed task → **SKIP IT**. Do not create or run it.
+2. Notify: `⚠ Skipped duplicate: [task title] — completed within the last 7 days.`
+3. Exception: If the CEO explicitly says "redo this" or "run again", bypass deduplication once.
+4. Recurring operational tasks (daily reports, daily status checks) are exempt — they are expected to repeat daily.
+
+---
+
+## Department Task Throttle
+
+**No department may have more than 5 active (in-progress or queued) tasks at one time.**
+
+### How to check active task count per department
+
+```bash
+curl -s "http://127.0.0.1:8790/api/tasks?status=in_progress" | \
+  node -e "
+    process.stdin.resume(); let d='';
+    process.stdin.on('data',c=>d+=c);
+    process.stdin.on('end',()=>{
+      const tasks=(JSON.parse(d).tasks||[]);
+      const counts={};
+      tasks.forEach(t=>{ const k=t.department_name||'?'; counts[k]=(counts[k]||0)+1; });
+      console.log(JSON.stringify(counts,null,2));
+    });"
+```
+
+### Rules
+
+1. Before assigning a new task to a department, check its active task count.
+2. If count >= 5 → **hold the task**. Do not assign it yet.
+3. When a department drops below 5 active tasks → assign the next held task automatically.
+4. Notify the CEO if a department is throttled: `⏸ [Department] at capacity (5/5 active tasks). New task queued.`
+
+---
+
+## File Save Paths by Department
+
+**All agents MUST save their output files to their department folder inside `D:/CLAWEMPIRETEW`.  
+Never save to temp directories, the project root, or made-up paths.**
+
+| Department | Save files to |
+|---|---|
+| Planning | `D:/CLAWEMPIRETEW/Planning/` |
+| Operations | `D:/CLAWEMPIRETEW/Operations/` |
+| Development | `D:/CLAWEMPIRETEW/Development/` |
+| Design | `D:/CLAWEMPIRETEW/Design/` |
+| QA/QC | `D:/CLAWEMPIRETEW/QA/` |
+| DevSecOps | `D:/CLAWEMPIRETEW/DevSecOps/` |
+| Hermes Crew | `D:/CLAWEMPIRETEW/Hermes/` |
+| Models/Roster | `D:/CLAWEMPIRETEW/Models/` |
+| Content | `D:/CLAWEMPIRETEW/Content/` |
+| Contracts | `D:/CLAWEMPIRETEW/Contracts/` |
+| Reports | `D:/CLAWEMPIRETEW/Reports/` |
+| Scripts | `D:/CLAWEMPIRETEW/Scripts/` |
+| Assets/Graphics | `D:/CLAWEMPIRETEW/Assets/` |
+
+### File naming convention
+`YYYY-MM-DD_[short-description].[ext]`
+Example: `2026-04-16_platform-compliance-checklist.md`
+
+### Agency context
+**Always read `D:/CLAWEMPIRETEW/context.md` at the start of any task** to get current model roster, platform info, and company facts. Do not invent data that is already documented there.
 
 ---
 

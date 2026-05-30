@@ -125,12 +125,18 @@ export default function AgentFormModal({
                   style={{ border: "2px solid var(--th-input-border)" }}
                 >
                   {spriteNum > 0 ? (
-                    <img
-                      src={`/sprites/${spriteNum}-D-1.png`}
-                      alt={`sprite ${spriteNum}`}
-                      className="w-full h-full object-cover"
-                      style={{ imageRendering: "pixelated" }}
-                    />
+                    <picture>
+                      <source srcSet={`/sprites/${spriteNum}-D-1.webp`} type="image/webp" />
+                      <img
+                        src={`/sprites/${spriteNum}-D-1.png`}
+                        alt={`sprite ${spriteNum}`}
+                        width={56}
+                        height={56}
+                        loading="lazy"
+                        className="w-full h-full object-cover"
+                        style={{ imageRendering: "pixelated" }}
+                      />
+                    </picture>
                   ) : (
                     <span className="text-2xl">{form.avatar_emoji || "🤖"}</span>
                   )}

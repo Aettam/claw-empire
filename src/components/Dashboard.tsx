@@ -117,10 +117,13 @@ export default function Dashboard({ stats, agents, tasks, companyName, onPrimary
       }));
   }, [stats, agents, agentMap, language]);
 
-  const maxXp = topAgents.length > 0 ? Math.max(...topAgents.map((agent) => agent.xp), 1) : 1;
+  const maxXp = useMemo(
+    () => (topAgents.length > 0 ? Math.max(...topAgents.map((agent) => agent.xp), 1) : 1),
+    [topAgents],
+  );
   const recentTasks = useMemo(() => [...tasks].sort((a, b) => b.updated_at - a.updated_at).slice(0, 6), [tasks]);
-  const workingAgents = agents.filter((agent) => agent.status === "working");
-  const idleAgentsList = agents.filter((agent) => agent.status === "idle");
+  const workingAgents = useMemo(() => agents.filter((agent) => agent.status === "working"), [agents]);
+  const idleAgentsList = useMemo(() => agents.filter((agent) => agent.status === "idle"), [agents]);
 
   const podiumOrder =
     topAgents.length >= 3

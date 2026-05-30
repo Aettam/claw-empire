@@ -136,7 +136,7 @@ export function createApiProviderTools(deps: CreateApiProviderToolsDeps) {
         },
         body: JSON.stringify({
           model,
-          max_tokens: 16384,
+          max_tokens: 8192,
           stream: true,
           messages: [{ role: "user", content: prompt }],
           system: `You are a coding assistant. Project path: ${projectPath}`,
@@ -181,6 +181,7 @@ export function createApiProviderTools(deps: CreateApiProviderToolsDeps) {
           { role: "user", content: prompt },
         ],
         stream: true,
+        max_tokens: 8192,
       }),
     };
   }

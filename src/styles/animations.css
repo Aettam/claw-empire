@@ -470,4 +470,28 @@
     animation: progress-indeterminate 1.6s var(--motion-ease-default, cubic-bezier(0.4, 0, 0.2, 1)) infinite;
   }
 
+  /* ─── Tab-hidden: pause infinite ambient animations when backgrounded ─── */
+  .tab-hidden .animate-agent-bounce,
+  .tab-hidden .animate-agent-work,
+  .tab-hidden .animate-pulse-ring,
+  .tab-hidden .animate-bubble-float,
+  .tab-hidden .animate-crown-wiggle,
+  .tab-hidden .animate-sparkle-spin,
+  .tab-hidden .animate-status-glow,
+  .tab-hidden .animate-heart-beat,
+  .tab-hidden .animate-drift-slow,
+  .tab-hidden .animate-drift-slow-rev,
+  .tab-hidden .animate-rank-float,
+  .tab-hidden .animate-neon-pulse-orange,
+  .tab-hidden .animate-streaming-cursor,
+  .tab-hidden .loading-bar-indeterminate,
+  .tab-hidden .learn-avatar-reading,
+  .tab-hidden .learn-reading-book,
+  .tab-hidden .learn-book-drop {
+    animation-play-state: paused !important;
+  }
+  .tab-hidden .xp-bar-fill::after {
+    animation-play-state: paused !important;
+  }
+
 } /* end @layer app-animations */

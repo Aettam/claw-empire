@@ -82,6 +82,13 @@ export function useAppLabels({
           ja: "設定",
           zh: "设置",
         })}`;
+      case "hermes":
+        return `⚡ ${pickLang(uiLanguage, {
+          ko: "허메스 에이전트",
+          en: "Hermes Agent",
+          ja: "ヘルメスエージェント",
+          zh: "赫尔墨斯代理",
+        })}`;
       default:
         return "";
     }

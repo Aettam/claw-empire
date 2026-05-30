@@ -264,5 +264,25 @@ export function applyDefaultSeeds(db: DbLike): void {
       }
     }
     if (added > 0) console.log(`[Claw-Empire] Added ${added} new agents`);
+
+    // SORTY — Content organizer (fixed UUID so daily-tasks.mjs can reference it)
+    const SORTY_UUID = "ebd19baf-5055-4194-a634-9326f46451df";
+    if (!existingNames.has("Sorty")) {
+      try {
+        insertAgentIfMissing.run(
+          SORTY_UUID,
+          "Sorty",
+          "소르티",
+          "operations",
+          "junior",
+          "claude",
+          "🗂️",
+          "모델 폴더 내 파일 정리 전문가",
+        );
+        console.log("[Claw-Empire] Added agent Sorty");
+      } catch (err) {
+        console.warn("[Claw-Empire] Skip adding agent Sorty:", err);
+      }
+    }
   }
 }

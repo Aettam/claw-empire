@@ -351,27 +351,25 @@ export function createReplyCoreTools(deps: CreateReplyCoreToolsDeps) {
   }
 
   function hasApprovalAgreementSignal(text: string): boolean {
-    return /승인|approve|approved|동의|agree|agreed|lgtm|go\s+ahead|merge\s+approve|병합\s*승인|전환\s*동의|조건부\s*승인/i.test(
+    return /최종\s*승인|full\s+approval|final\s+approval|approve(d)?\s+without\s+reservation|unconditionally\s+approve|lgtm|ship\s+it|merge\s+approve|병합\s*승인/i.test(
       text,
     );
   }
 
-  function isDeferrableReviewHold(text: string): boolean {
-    const cleaned = text.replace(/\s+/g, " ").trim();
-    if (!cleaned) return false;
-    if (!isMvpDeferralSignal(cleaned)) return false;
-    if (isHardBlockSignal(cleaned)) return false;
-    return true;
+  function isDeferrableReviewHold(_text: string): boolean {
+    // Strict judge mode: no auto-deferral. Any hold is a real hold — reviewers
+    // must fix the concern before approval rather than pushing it to post-merge
+    // monitoring.
+    return false;
   }
 
   function classifyMeetingReviewDecision(text: string): MeetingReviewDecision {
     const cleaned = text.replace(/\s+/g, " ").trim();
     if (!cleaned) return "reviewing";
     const hasApprovalAgreement = hasApprovalAgreementSignal(cleaned);
-    const hasMvpDeferral = isMvpDeferralSignal(cleaned);
     const hasHardBlock = isHardBlockSignal(cleaned);
     const hasApprovalSignal =
-      /(승인|통과|문제없|진행.?가능|배포.?가능|approve|approved|lgtm|ship\s+it|go\s+ahead|承認|批准|通过|可发布)/i.test(
+      /(최종\s*승인|통과|문제없|진행.?가능|배포.?가능|approve|approved|lgtm|ship\s+it|go\s+ahead|承認|批准|通过|可发布)/i.test(
         cleaned,
       );
     const hasNoRiskSignal =
@@ -379,18 +377,22 @@ export function createReplyCoreTools(deps: CreateReplyCoreToolsDeps) {
         cleaned,
       );
     const hasConditionalOrHoldSignal =
-      /(조건부|보완|수정|보류|리스크|미흡|미완|추가.?필요|재검토|중단|불가|hold|revise|revision|changes?\s+requested|required|pending|risk|block|missing|incomplete|not\s+ready|保留|修正|风险|补充|未完成|暂缓|差し戻し)/i.test(
+      /(조건부|보완|수정|보류|리스크|미흡|미완|추가.?필요|재검토|중단|불가|hold|revise|revision|changes?\s+requested|required|pending|risk|block|missing|incomplete|not\s+ready|residual\s+risk|follow[-\s]?up|post[-\s]?merge|later|defer|보류|保留|修正|风险|补充|未完成|暂缓|差し戻し)/i.test(
         cleaned,
       );
 
+    // Strict judge: hard blockers and any conditional/hold language always hold.
+    if (hasHardBlock) return "hold";
+    if (hasConditionalOrHoldSignal) return "hold";
+
+    // Approval requires BOTH an explicit approval phrase AND an explicit no-risk
+    // confirmation. Bare "approve" without a no-risk attestation is not enough.
     if (hasApprovalSignal && hasNoRiskSignal) return "approved";
-    if ((hasApprovalAgreement || hasApprovalSignal) && hasMvpDeferral && !hasHardBlock) return "approved";
-    if (hasConditionalOrHoldSignal) {
-      if ((hasApprovalAgreement || hasApprovalSignal) && hasMvpDeferral && !hasHardBlock) return "approved";
-      return "hold";
-    }
-    if (hasApprovalSignal || hasNoRiskSignal || hasApprovalAgreement) return "approved";
-    return "reviewing";
+    if (hasApprovalAgreement && hasNoRiskSignal) return "approved";
+
+    // Strict judge: if a reviewer spoke without giving a clear approval+no-risk
+    // attestation, default to HOLD rather than letting ambiguity pass through.
+    return "hold";
   }
 
   function wantsReviewRevision(content: string): boolean {

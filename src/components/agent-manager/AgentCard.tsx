@@ -17,6 +17,7 @@ interface AgentCardProps {
   onDeleteConfirm: () => void;
   onDeleteCancel: () => void;
   saving: boolean;
+  staggerIndex?: number;
 }
 
 export default function AgentCard({
@@ -32,22 +33,38 @@ export default function AgentCard({
   onDeleteConfirm,
   onDeleteCancel,
   saving,
+  staggerIndex = 0,
 }: AgentCardProps) {
   const isDeleting = confirmDeleteId === agent.id;
   const dept = departments.find((d) => d.id === agent.department_id);
+  const staggerDelay = Math.min(staggerIndex * 50, 500);
 
   return (
     <div
       onClick={onEdit}
-      className="group rounded-xl p-4 cursor-pointer transition-all hover:scale-[1.01] hover:shadow-lg hover:shadow-black/10"
-      style={{ background: "var(--th-card-bg)", border: "1px solid var(--th-card-border)" }}
+      className="group rounded-xl p-4 cursor-pointer transition-all hover:scale-[1.01] hover:shadow-lg hover:shadow-black/10 focus-visible:outline-2 focus-visible:outline-offset-2"
+      style={{
+        background: "var(--th-card-bg)",
+        border: "1px solid var(--th-card-border)",
+        animation: `list-enter var(--motion-duration-slow, 400ms) var(--motion-ease-bounce, cubic-bezier(0.34, 1.56, 0.64, 1)) both`,
+        animationDelay: `${staggerDelay}ms`,
+        transition: `transform var(--motion-duration-normal, 250ms) var(--motion-ease-default, ease),
+                     box-shadow var(--motion-duration-normal, 250ms) var(--motion-ease-default, ease),
+                     border-color var(--motion-duration-normal, 250ms) var(--motion-ease-default, ease)`,
+        outlineColor: "var(--th-focus-ring)",
+      }}
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onEdit(); } }}
     >
       <div className="flex items-start gap-3">
         <div className="relative shrink-0">
-          <AgentAvatar agent={agent} spriteMap={spriteMap} size={44} rounded="xl" />
+          <AgentAvatar agent={agent} spriteMap={spriteMap} size={44} rounded="xl" showTooltip />
           <div
             className={`absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 ${STATUS_DOT[agent.status] ?? STATUS_DOT.idle}`}
-            style={{ borderColor: "var(--th-card-bg)" }}
+            style={{
+              borderColor: "var(--th-card-bg)",
+              transition: `background-color var(--motion-duration-normal, 250ms) var(--motion-ease-default, ease)`,
+            }}
           />
         </div>
         <div className="flex-1 min-w-0">
@@ -102,6 +119,7 @@ export default function AgentCard({
         </div>
         <div
           className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+          style={{ transitionDuration: "var(--motion-duration-fast, 150ms)" }}
           onClick={(e) => e.stopPropagation()}
         >
           {isDeleting ? (

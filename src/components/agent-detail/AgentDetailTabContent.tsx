@@ -225,12 +225,18 @@ export default function AgentDetailTabContent({
             className={`bg-slate-700/30 rounded-lg p-3 flex items-center gap-3 ${subAgent.status === "working" ? "animate-alba-spawn" : ""}`}
           >
             <div className="w-8 h-8 rounded-full bg-amber-500/20 overflow-hidden flex items-center justify-center">
-              <img
-                src={`/sprites/${getSubAgentSpriteNum(subAgent.id)}-D-1.png`}
-                alt={t({ ko: "알바생", en: "Sub-agent", ja: "サブエージェント", zh: "子代理" })}
-                className="w-full h-full object-cover"
-                style={{ imageRendering: "pixelated" }}
-              />
+              <picture>
+                <source srcSet={`/sprites/${getSubAgentSpriteNum(subAgent.id)}-D-1.webp`} type="image/webp" />
+                <img
+                  src={`/sprites/${getSubAgentSpriteNum(subAgent.id)}-D-1.png`}
+                  alt={t({ ko: "알바생", en: "Sub-agent", ja: "サブエージェント", zh: "子代理" })}
+                  width={32}
+                  height={32}
+                  loading="lazy"
+                  className="w-full h-full object-cover"
+                  style={{ imageRendering: "pixelated" }}
+                />
+              </picture>
             </div>
             <div className="flex-1 min-w-0">
               <div className="text-sm text-white truncate flex items-center gap-1.5">

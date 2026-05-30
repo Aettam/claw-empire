@@ -319,10 +319,10 @@ export function createReviewConsensusTools(deps: ReviewConsensusDeps) {
               ? "Kick off round 3 final decision discussion and confirm that no additional remediation round will be opened."
               : "Kick off round 1 review discussion and ask each leader for all required remediation items in one pass.",
           stanceHint: isRound2Merge
-            ? "Focus on consolidation and merge readiness. Convert concerns into documented residual risks instead of new subtasks."
+            ? "Focus on consolidation and merge readiness. Hold approval if any concern is unresolved — do not paper over gaps with 'residual risk' notes."
             : isFinalDecisionRound
-              ? "Finalize approval decision and documentation package. Do not ask for new remediation subtasks."
-              : "Capture every remediation requirement now so execution can proceed in parallel once.",
+              ? "Apply a HARSH quality bar. Approve ONLY when the work is clearly excellent and every concern is fully resolved. When in doubt, hold."
+              : "Apply a HARSH quality bar and default to holding approval. Capture every defect, risk, gap, missing test, and unclear spec as a remediation requirement. Only mediocre or worse work is common — be strict about what counts as good enough.",
           lang,
         });
         const openingRun = await runMeetingOneShotWithRetry(planningLeader, openingPrompt, "opening");
@@ -347,10 +347,10 @@ export function createReviewConsensusTools(deps: ReviewConsensusDeps) {
                 ? "Provide final approval opinion with documentation-ready rationale."
                 : "Provide concise review feedback and list all revision requirements that must be addressed in round 1.",
             stanceHint: isRound2Merge
-              ? "Do not ask for a new remediation round; if concerns remain, describe residual risks for final documentation."
+              ? "Do not ask for a new remediation round. If any concern remains unresolved, HOLD — do not approve-with-residual-risk."
               : isFinalDecisionRound
-                ? "No additional remediation is allowed in this final round. Choose final approve or approve-with-residual-risk."
-                : "If revision is needed, explicitly state what must be fixed before approval.",
+                ? "HARSH judge: approve ONLY when quality is clearly excellent and every concern is fully resolved. Approve-with-residual-risk is NOT permitted — residual risk means HOLD. Your default answer is hold."
+                : "Default to requesting revision. Approval requires a high quality bar with zero unresolved issues. Explicitly list every fix required before you will approve.",
             lang,
           });
           const feedbackRun = await runMeetingOneShotWithRetry(leader, feedbackPrompt, "feedback");
@@ -380,8 +380,8 @@ export function createReviewConsensusTools(deps: ReviewConsensusDeps) {
                 ? "As the only reviewer, publish the final approval conclusion and documentation note."
                 : "As the only reviewer, provide your single-party review conclusion with complete remediation checklist.",
             stanceHint: isFinalDecisionRound
-              ? "No further remediation round is allowed. Conclude with final decision and documented residual risks if any."
-              : "Summarize risks, dependencies, and confidence level in one concise message.",
+              ? "HARSH judge: approve ONLY when quality is clearly excellent with zero unresolved issues. Residual risk means HOLD. Your default is hold."
+              : "Summarize risks, dependencies, and confidence level in one concise message. Default to holding approval unless quality is clearly excellent.",
             lang,
           });
           const soloRun = await runMeetingOneShotWithRetry(planningLeader, soloPrompt, "feedback");
@@ -438,14 +438,14 @@ export function createReviewConsensusTools(deps: ReviewConsensusDeps) {
                 ? "State your final approval decision and documentation conclusion for this task."
                 : "State your final approval decision for this review round.",
             stanceHint: isRound2Merge
-              ? "If concerns remain, record residual risk only. Do not request a new remediation subtask round."
+              ? "If ANY concern remains unresolved, HOLD approval. Do not rubber-stamp with 'residual risk' language."
               : isFinalDecisionRound
-                ? "This is the final round. Additional remediation is not allowed; conclude with approve or approve-with-documented-risk."
+                ? "HARSH judge final call: approve ONLY if quality is clearly excellent with zero unresolved issues. Residual risk = HOLD. Your default answer is HOLD."
                 : !needsRevision
-                  ? "Approve the current review package if ready; otherwise hold approval with concrete revision items."
+                  ? "Default to HOLDING approval. Only approve when the package clearly meets a high quality bar; otherwise list concrete revision items."
                   : isReviseOwner
-                    ? "Hold approval until your requested revision is reflected."
-                    : "Agree with conditional approval pending revision reflection.",
+                    ? "HOLD approval until your requested revision is fully reflected — do not soften."
+                    : "Do not rubber-stamp. HOLD approval until revisions are reflected; refuse conditional approval.",
             lang,
           });
           const approvalRun = await runMeetingOneShotWithRetry(leader, approvalPrompt, "approval");

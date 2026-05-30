@@ -16,6 +16,9 @@ type CreateConversationContextToolsDeps = {
 export function createConversationContextTools(deps: CreateConversationContextToolsDeps) {
   const { db, normalizeStreamChunk, summarizeForMeetingBubble } = deps;
 
+  const CONTEXT_BUDGET_CHARS = 3000;
+  const PER_MESSAGE_MAX_CHARS = 800;
+
   function getRecentConversationContext(agentId: string, limit = 10): string {
     const msgs = db
       .prepare(
@@ -41,13 +44,34 @@ export function createConversationContextTools(deps: CreateConversationContextTo
 
     if (msgs.length === 0) return "";
 
-    const lines = msgs.reverse().map((m) => {
+    const chronological = msgs.reverse();
+    const rendered = chronological.map((m) => {
       const role = m.sender_type === "ceo" ? "CEO" : "Agent";
       const type = m.message_type !== "chat" ? ` [${m.message_type}]` : "";
-      return `${role}${type}: ${m.content}`;
+      const body =
+        m.content.length > PER_MESSAGE_MAX_CHARS
+          ? `${m.content.slice(0, PER_MESSAGE_MAX_CHARS)}…[truncated]`
+          : m.content;
+      return `${role}${type}: ${body}`;
     });
 
-    return `\n\n--- Recent conversation context ---\n${lines.join("\n")}\n--- End context ---`;
+    const kept: string[] = [];
+    let total = 0;
+    let dropped = 0;
+    for (let i = rendered.length - 1; i >= 0; i--) {
+      const line = rendered[i];
+      if (total + line.length + 1 > CONTEXT_BUDGET_CHARS && kept.length > 0) {
+        dropped = i + 1;
+        break;
+      }
+      kept.unshift(line);
+      total += line.length + 1;
+    }
+    if (dropped > 0) {
+      kept.unshift(`[${dropped} older message(s) omitted to stay within context budget]`);
+    }
+
+    return `\n\n--- Recent conversation context ---\n${kept.join("\n")}\n--- End context ---`;
   }
 
   function extractLatestProjectMemoBlock(description: string, maxChars = 1600): string {

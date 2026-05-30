@@ -38,11 +38,14 @@ export default function ChatPanelHeader({
         {selectedAgent ? (
           <>
             <div className="relative flex-shrink-0">
-              <AgentAvatar agent={selectedAgent} spriteMap={spriteMap} size={40} />
+              <AgentAvatar agent={selectedAgent} spriteMap={spriteMap} size={40} showTooltip />
               <span
                 className={`absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-gray-800 ${
                   statusColors[selectedAgent.status] ?? "bg-gray-500"
                 }`}
+                style={{
+                  transition: `background-color var(--motion-duration-normal, 250ms) var(--motion-ease-default, ease)`,
+                }}
               />
             </div>
 
@@ -136,7 +139,12 @@ export default function ChatPanelHeader({
       </div>
 
       {showAnnouncementBanner && (
-        <div className="flex flex-shrink-0 items-center gap-2 border-b border-yellow-500/30 bg-yellow-500/10 px-4 py-2">
+        <div
+          className="flex flex-shrink-0 items-center gap-2 border-b border-yellow-500/30 bg-yellow-500/10 px-4 py-2"
+          style={{
+            animation: `list-enter var(--motion-duration-slow, 400ms) var(--motion-ease-out, cubic-bezier(0, 0, 0.2, 1)) both`,
+          }}
+        >
           <span className="text-sm font-medium text-yellow-400">
             📢{" "}
             {tr(

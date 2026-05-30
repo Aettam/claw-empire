@@ -225,7 +225,7 @@ export async function processReviewConsensusOutcome(ctx: OutcomeContext): Promis
     appendTaskLog(
       taskId,
       "system",
-      `Review consensus round ${round}: forcing finalization with documented residual risk (${forceReason})`,
+      `Review consensus round ${round}: strict judge — task FAILED review with unresolved holds (${forceReason}). NOT auto-approving; awaiting CEO decision.`,
     );
 
     appendTaskReviewFinalMemo(taskId, round, transcript as MeetingTranscriptEntry[], lang, true);
@@ -233,27 +233,28 @@ export async function processReviewConsensusOutcome(ctx: OutcomeContext): Promis
       pickL(
         l(
           [
-            `[CEO OFFICE] '${taskTitle}' 리뷰 라운드 ${round}에서 잔여 리스크를 최종 문서에 반영했습니다. 추가 보완 없이 최종 승인 판단으로 종료합니다.`,
+            `[CEO OFFICE] '${taskTitle}' 리뷰 라운드 ${round}에서 미해결 보류 의견이 남아 자동 승인하지 않습니다. 강화된 판정 기준에 따라 CEO 직접 결정이 필요합니다.`,
           ],
           [
-            `[CEO OFFICE] In review round ${round} for '${taskTitle}', residual risks were embedded in the final document package. Closing with final approval decision and no further remediation.`,
+            `[CEO OFFICE] '${taskTitle}' review round ${round} ended with unresolved holds. Strict judge: NOT auto-approving. CEO decision required to force-approve, reject, or re-open remediation.`,
           ],
           [
-            `[CEO OFFICE] '${taskTitle}' のレビューラウンド${round}で残余リスクを最終文書へ反映しました。追加補完なしで最終承認判断を完了します。`,
+            `[CEO OFFICE] '${taskTitle}' のレビューラウンド${round}で未解決の保留意見が残りました。強化判定により自動承認を行いません。CEOによる最終決定が必要です。`,
           ],
           [
-            `[CEO OFFICE] '${taskTitle}' 第${round}轮评审已将剩余风险写入最终文档包，在不新增整改的前提下完成最终审批判断。`,
+            `[CEO OFFICE] '${taskTitle}' 第${round}轮评审仍存在未解决保留意见。严格判定下不自动批准，需 CEO 手动决策。`,
           ],
         ),
         lang,
       ),
       taskId,
     );
-    if (meetingId) finishMeetingMinutes(meetingId, "completed");
+    if (meetingId) finishMeetingMinutes(meetingId, "revision_requested");
     dismissLeadersFromCeoOffice(taskId, leaders);
     reviewRoundState.delete(taskId);
     reviewInFlight.delete(taskId);
-    onApproved();
+    // Strict judge: do NOT call onApproved() when unresolved holds remain.
+    // Task stays out of Done until CEO intervenes.
     return true;
   }
 

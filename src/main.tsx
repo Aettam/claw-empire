@@ -29,6 +29,10 @@ if ("serviceWorker" in navigator) {
       });
   });
 }
+// ── Pause CSS animations when the tab is backgrounded (saves GPU) ────────────
+document.addEventListener("visibilitychange", () => {
+  document.documentElement.classList.toggle("tab-hidden", document.hidden);
+});
 // ─────────────────────────────────────────────────────────────────────────────
 
 createRoot(document.getElementById("root")!).render(

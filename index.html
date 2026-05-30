@@ -4,27 +4,27 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0a0a18" />
+    <meta name="description" content="Manage AI agents, assign tasks, and watch your company collaborate in real-time. An immersive agent company simulator." />
+    <meta property="og:title" content="Claw-Empire — AI Agent Company Simulation" />
+    <meta property="og:description" content="Manage AI agents, assign tasks, and watch your company collaborate in real-time." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/claw-empire.png" />
     <title>Claw-Empire - AI Agent Company Simulation</title>
     <link rel="icon" type="image/svg+xml" href="/claw-empire.svg" />
+    <link rel="apple-touch-icon" href="/claw-empire.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@600;700;800&display=swap" />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <link rel="preload" as="image" href="/sprites/ceo-lobster.png" />
-    <link rel="preload" as="image" href="/sprites/3-D-1.png" />
-    <link rel="preload" as="image" href="/sprites/8-D-1.png" />
+    <link rel="preload" as="image" href="/sprites/ceo-lobster.webp" type="image/webp" />
+    <link rel="preload" as="image" href="/sprites/3-D-1.webp" type="image/webp" />
+    <link rel="preload" as="image" href="/sprites/8-D-1.webp" type="image/webp" />
     <!--
-      Sprite size audit (Round-3 perf pass):
-        Above-200 KB sprites that should be re-encoded by a future asset pipeline
-        (WebP/AVIF + size-variants). They are background/secondary characters,
-        not above-the-fold UI, so they're served at fetchpriority="low" today:
-          - /sprites/13-R-1.png  (~1.2 MB)
-          - /sprites/14-D-1.png  (~1.16 MB)
-          - /sprites/14-D-2.png  (~1.16 MB)
-          - /sprites/14-D-3.png  (~1.16 MB)
-          - /sprites/14-L-1.png  (~1.16 MB)
-          - /sprites/14-R-1.png  (~1.16 MB)
-        Target: <100 KB per frame via WebP @ q=80 or AVIF @ q=50.
+      Sprite size audit (Round-3 perf pass): the formerly-oversized background
+      characters (13-R-1, 14-D-1..3, 14-L-1, 14-R-1, each ~1.16 MB as PNG) now
+      ship WebP variants under 60 KB/frame. All 71 sprites have a .webp sibling;
+      <picture> tags and the Pixi office runtime load WebP first and fall back to
+      PNG only if missing.
     -->
   </head>
   <body class="bg-slate-900 text-white">

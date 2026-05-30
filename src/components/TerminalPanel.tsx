@@ -147,13 +147,12 @@ export default function TerminalPanel({
     }
   }, [text, follow]);
 
-  // Detect if user scrolled away from bottom
-  function handleScroll() {
+  const handleScroll = useCallback(() => {
     if (!containerRef.current) return;
     const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
     const atBottom = scrollHeight - scrollTop - clientHeight < 50;
     if (!atBottom && follow) setFollow(false);
-  }
+  }, [follow]);
 
   function scrollToBottom() {
     if (containerRef.current) {

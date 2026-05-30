@@ -4,18 +4,30 @@ import { EMOJI_GROUPS } from "./constants";
 export function StackedSpriteIcon({ sprites }: { sprites: [number, number] }) {
   return (
     <span className="relative inline-flex items-center" style={{ width: 22, height: 16 }}>
-      <img
-        src={`/sprites/${sprites[0]}-D-1.png`}
-        alt=""
-        className="absolute left-0 top-0 w-4 h-4 rounded-full object-cover"
-        style={{ imageRendering: "pixelated", opacity: 0.85 }}
-      />
-      <img
-        src={`/sprites/${sprites[1]}-D-1.png`}
-        alt=""
-        className="absolute left-1.5 top-px w-4 h-4 rounded-full object-cover"
-        style={{ imageRendering: "pixelated", zIndex: 1 }}
-      />
+      <picture className="absolute left-0 top-0 w-4 h-4">
+        <source srcSet={`/sprites/${sprites[0]}-D-1.webp`} type="image/webp" />
+        <img
+          src={`/sprites/${sprites[0]}-D-1.png`}
+          alt=""
+          width={16}
+          height={16}
+          loading="lazy"
+          className="absolute left-0 top-0 w-4 h-4 rounded-full object-cover"
+          style={{ imageRendering: "pixelated", opacity: 0.85 }}
+        />
+      </picture>
+      <picture className="absolute left-1.5 top-px w-4 h-4">
+        <source srcSet={`/sprites/${sprites[1]}-D-1.webp`} type="image/webp" />
+        <img
+          src={`/sprites/${sprites[1]}-D-1.png`}
+          alt=""
+          width={16}
+          height={16}
+          loading="lazy"
+          className="absolute left-1.5 top-px w-4 h-4 rounded-full object-cover"
+          style={{ imageRendering: "pixelated", zIndex: 1 }}
+        />
+      </picture>
     </span>
   );
 }

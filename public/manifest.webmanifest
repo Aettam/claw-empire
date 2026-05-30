@@ -1,9 +1,12 @@
 {
   "name": "Claw-Empire — AI Agent Company Simulation",
   "short_name": "Claw-Empire",
+  "description": "Manage AI agents, assign tasks, and watch your company collaborate in real-time.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
+  "orientation": "any",
+  "categories": ["productivity", "games"],
   "background_color": "#0a0a18",
   "theme_color": "#0a0a18",
   "icons": [
