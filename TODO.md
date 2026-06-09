@@ -38,3 +38,9 @@ None. Memory from 2026-05-20 accurately reflects current state:
 - SQLite DB exists + recent (`claw-empire.sqlite`, last updated 2026-04-16 3:45 PM) ✓
 - Clean main branch, dev branch tracking origin/dev with PR #66 merge ancestry ✓
 - CI pipeline gates: format, lint, OpenAPI contract, type check, build, e2e tests ✓
+
+## 🔍 Gap analysis — added by Claude 2026-06-08
+
+- [ ] **Fix the stuck push (wrong GitHub owner on `origin`)** — Right now `main` is 9 commits ahead but can't be pushed because the `origin` remote points at a GitHub account that isn't the one logged in here (`origin` = `GreenSheep01201/claw-empire`, but the saved login is `stocktonsassistant-web`). Good news: a second remote called `aettam` (`Aettam/claw-empire.git`) already exists. Decide which GitHub repo is the real home, then either get added as a collaborator on it or repoint `origin` to a repo you own — and push so those 9 commits stop living only on this PC. (This is the #1 thing keeping your work from being backed up online.)
+- [ ] **Actually stand up the public deploy — or decide to stay local** — The `deploy/` folder has finished server setup files (systemd + nginx) for putting this online, but it's never been deployed anywhere public. Either follow those configs to launch it on a server, or make a clear note that it's intentionally local-only, so this half-built deploy path stops being a loose end.
+- [ ] **Confirm the database is being backed up somewhere** — The live data lives in one SQLite file (`claw-empire.sqlite`) that is correctly NOT committed to git. That's right for git, but it also means there is no copy anywhere if this PC dies. Set up a simple scheduled copy of that file to Dropbox/another drive so a disk failure doesn't wipe the whole pretend-company's state.
