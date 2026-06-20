@@ -386,18 +386,26 @@ This repo now ships production-oriented Docker defaults:
 cp .env.example .env.docker
 ```
 
-Create `.env.docker.private` for sensitive runtime secrets (keep this file local only):
+Create `.env.docker.private` for sensitive runtime secrets (keep this file local only).
+Copy the committed template and fill in real values:
 
 ```bash
-cat > .env.docker.private <<'EOF'
-# Claude Code via compatible endpoint
-ANTHROPIC_BASE_URL=https://api.minimaxi.com/anthropic
-ANTHROPIC_API_KEY=YOUR_ANTHROPIC_API_KEY
-EOF
+cp .env.docker.private.example .env.docker.private
 chmod 600 .env.docker.private
 ```
 
-> `.env.docker*` is ignored by git (`.env.*`), so tokens are not committed by default.
+At minimum, set a stable `OAUTH_ENCRYPTION_SECRET` (and an `API_AUTH_TOKEN`, since the
+container listens on `0.0.0.0`). Generate each 32-byte hex secret with:
+
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+See `.env.docker.private.example` for the full list of supported secrets (webhook
+secret, OAuth client secrets, model-provider / Anthropic-compatible endpoint keys).
+
+> Only `.env.docker` and the `*.example` templates are committed. The real
+> `.env.docker.private` (like `.env`) is gitignored, so tokens are never committed.
 
 ### 2) Start
 

@@ -19,6 +19,9 @@ custom-skills/
 .env.*
 !.env.example
 !.env.docker
+!.env.docker.example
+# Committed templates (NOT the real secrets file .env.docker.private)
+!.env.docker.private.example
 .direnv/
 *.pem
 *.key

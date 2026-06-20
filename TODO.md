@@ -6,20 +6,20 @@
 
 ## 🚧 BOTTLENECKS — Need from Stockton
 
-- [ ] **Docker `.env.docker.private` setup** — File referenced in `docker-compose.yml:12` but not tracked (git-ignored). Needs template or documented generation path for container deployments.
-- [ ] **Stale `.env.docker` path** — Docker compose references `.env.docker` (line 12) but only `.env` + `.env.example` exist in repo. Clarify Docker-vs-local env separation.
+- [x] **Docker `.env.docker.private` setup** — Resolved: `.env.docker.private` stays gitignored (correct — it holds secrets), and a committed `.env.docker.private.example` template + README generation steps now document how container users create it. (2026-06-19)
+- [x] **Stale `.env.docker` path** — Resolved/clarified: `.env.docker` IS tracked (whitelisted in `.gitignore`); compose loads `.env.docker` (non-secret, committed) + `.env.docker.private` (secrets, gitignored). Documented in README. (Original note was stale.) (2026-06-19)
 
 ## 👤 Stockton's tasks
 
 - [ ] Verify Docker deployment pipeline (Dockerfile builds cleanly, compose runs on target infra)
-- [ ] Document `.env.docker` / `.env.docker.private` generation for containerized deployments
+- [x] Document `.env.docker` / `.env.docker.private` generation for containerized deployments — README "Prepare environment files" now points at `.env.docker.private.example` with the `randomBytes(32)` generation command and the required-secrets list. (2026-06-19, Claude)
 - [ ] Audit OpenCode Go and Bailian Coding Plan presets post-v2.0.4 integration (Settings > API presets)
 - [ ] Test Kimi Code end-to-end flow (provider selection → task execution → skill routing)
 
 ## 🤖 Claude's tasks
 
-- [ ] **Add `.env.docker` template** — Create `.env.docker.example` mirroring `.env.example` structure for container users — **S**
-- [ ] **Resolve Docker env references** — Either create tracked `.env.docker` files or update compose to reference only `.env` — **S**
+- [x] **Add `.env.docker` template** — Created `.env.docker.private.example` (committed, fill-in-the-blanks secrets template mirroring `.env.example`) and whitelisted `*.docker*.example` in `.gitignore` so templates can actually be tracked. (2026-06-19)
+- [x] **Resolve Docker env references** — Confirmed `.env.docker` is already tracked and `.env.docker.private` is correctly gitignored; documented the split + private-secret generation in README and the new template. (2026-06-19)
 - [ ] **Grep full codebase for TODO/FIXME** — Ripgrep timed out on full project (>20s); run locally to capture any sprint backlog — **M**
 - [ ] **Verify E2E test isolation** — Post-v2.0.4 `.tmp/e2e-runtime` reset logic; confirm Playwright no longer reuses port 8810 by default — **M**
 - [ ] **Cross-check migration script `auto-apply-v1.0.5.mjs`** — Hooked in all `pre*` scripts; verify it's idempotent for repeated dev runs — **M**
