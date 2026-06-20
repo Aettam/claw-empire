@@ -4,9 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#0a0a18" />
-    <meta name="description" content="Manage AI agents, assign tasks, and watch your company collaborate in real-time. An immersive agent company simulator." />
+    <meta
+      name="description"
+      content="Manage AI agents, assign tasks, and watch your company collaborate in real-time. An immersive agent company simulator."
+    />
     <meta property="og:title" content="Claw-Empire — AI Agent Company Simulation" />
-    <meta property="og:description" content="Manage AI agents, assign tasks, and watch your company collaborate in real-time." />
+    <meta
+      property="og:description"
+      content="Manage AI agents, assign tasks, and watch your company collaborate in real-time."
+    />
     <meta property="og:type" content="website" />
     <meta property="og:image" content="/claw-empire.png" />
     <title>Claw-Empire - AI Agent Company Simulation</title>
@@ -14,7 +20,11 @@
     <link rel="apple-touch-icon" href="/claw-empire.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@600;700;800&display=swap" />
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Sora:wght@600;700;800&display=swap"
+    />
     <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="preload" as="image" href="/sprites/ceo-lobster.webp" type="image/webp" />
     <link rel="preload" as="image" href="/sprites/3-D-1.webp" type="image/webp" />
@@ -27,10 +37,29 @@
       PNG only if missing.
     -->
     <!--
+      Apply the saved theme to <html> before the first paint so the loading
+      splash below matches the user's chosen mode (light is the default — see
+      src/ThemeContext.tsx). Mirrors the THEME_STORAGE_KEY ("climpire_theme")
+      read in ThemeProvider so light-mode users no longer get a dark flash on
+      reload. Tiny + synchronous so it runs before the splash renders.
+    -->
+    <script>
+      (function () {
+        try {
+          var stored = window.localStorage.getItem("climpire_theme");
+          document.documentElement.setAttribute("data-theme", stored === "dark" ? "dark" : "light");
+        } catch (e) {
+          document.documentElement.setAttribute("data-theme", "light");
+        }
+      })();
+    </script>
+    <!--
       Pre-hydration loading splash: static markup that paints instantly (no JS
       needed) so the first frame is a branded screen instead of a black void.
       React's createRoot().render() replaces #root's children on mount, so the
       splash disappears the moment the app is ready — no JS teardown required.
+      The dark-navy styles below are the default; [data-theme="light"] overrides
+      repaint the splash in the app's cream light palette to match theme.css.
     -->
     <style>
       #app-loader {
@@ -85,26 +114,68 @@
         border-radius: 50%;
         animation: app-loader-bounce 1.2s ease-in-out infinite;
       }
-      #app-loader .al-dots span:nth-child(1) { background: #f59e0b; animation-delay: 0s; }
-      #app-loader .al-dots span:nth-child(2) { background: #3b82f6; animation-delay: 0.18s; }
-      #app-loader .al-dots span:nth-child(3) { background: #8b5cf6; animation-delay: 0.36s; }
+      #app-loader .al-dots span:nth-child(1) {
+        background: #f59e0b;
+        animation-delay: 0s;
+      }
+      #app-loader .al-dots span:nth-child(2) {
+        background: #3b82f6;
+        animation-delay: 0.18s;
+      }
+      #app-loader .al-dots span:nth-child(3) {
+        background: #8b5cf6;
+        animation-delay: 0.36s;
+      }
       @keyframes app-loader-in {
-        from { opacity: 0; }
-        to   { opacity: 1; }
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
       }
       @keyframes app-loader-pulse {
-        0%, 100% { transform: scale(1);    filter: drop-shadow(0 10px 28px rgba(245, 158, 11, 0.22)); }
-        50%      { transform: scale(1.05); filter: drop-shadow(0 14px 34px rgba(245, 158, 11, 0.42)); }
+        0%,
+        100% {
+          transform: scale(1);
+          filter: drop-shadow(0 10px 28px rgba(245, 158, 11, 0.22));
+        }
+        50% {
+          transform: scale(1.05);
+          filter: drop-shadow(0 14px 34px rgba(245, 158, 11, 0.42));
+        }
       }
       @keyframes app-loader-bounce {
-        0%, 80%, 100% { transform: translateY(0);     opacity: 0.45; }
-        40%           { transform: translateY(-7px);  opacity: 1; }
+        0%,
+        80%,
+        100% {
+          transform: translateY(0);
+          opacity: 0.45;
+        }
+        40% {
+          transform: translateY(-7px);
+          opacity: 1;
+        }
       }
       @media (prefers-reduced-motion: reduce) {
         #app-loader,
         #app-loader .al-logo,
-        #app-loader .al-dots span { animation: none; }
-        #app-loader .al-dots span { opacity: 0.8; }
+        #app-loader .al-dots span {
+          animation: none;
+        }
+        #app-loader .al-dots span {
+          opacity: 0.8;
+        }
+      }
+      /* Light-mode splash — cream palette mirroring theme.css [data-theme="light"]. */
+      [data-theme="light"] #app-loader {
+        background: radial-gradient(120% 120% at 50% 0%, #fffdf8 0%, #f7f3ec 60%);
+      }
+      [data-theme="light"] #app-loader .al-wordmark {
+        color: #1a1614;
+      }
+      [data-theme="light"] #app-loader .al-tagline {
+        color: #908880;
       }
     </style>
   </head>
