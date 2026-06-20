@@ -5,6 +5,7 @@ dist/
 # Runtime artifacts
 logs/
 data/
+.tmp/
 custom-skills/
 /tasks/
 *.log

@@ -23,6 +23,7 @@
 - [ ] **Grep full codebase for TODO/FIXME** — Ripgrep timed out on full project (>20s); run locally to capture any sprint backlog — **M**
 - [ ] **Verify E2E test isolation** — Post-v2.0.4 `.tmp/e2e-runtime` reset logic; confirm Playwright no longer reuses port 8810 by default — **M**
 - [ ] **Cross-check migration script `auto-apply-v1.0.5.mjs`** — Hooked in all `pre*` scripts; verify it's idempotent for repeated dev runs — **M**
+- [x] **Pre-hydration loading splash** — Added a branded static splash inside `#root` in `index.html` (logo pulse + gradient wordmark + bouncing dots, dark-navy theme, `prefers-reduced-motion` guard). Paints instantly so first frame is a branded screen instead of a black void; React's `createRoot().render()` wipes it on mount. Also gitignored `.tmp/`. Verified computed styles in a real browser. (2026-06-20, Claude) — follow-up idea: make the splash read `data-theme` from localStorage so it matches light mode on reload.
 
 ## ✅ Recently shipped
 
