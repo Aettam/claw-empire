@@ -101,6 +101,10 @@
     --th-focus-ring: #38bdf8;
     --th-focus-ring-shadow: rgba(56, 189, 248, 0.25);
 
+    /* — Color: Text Selection — */
+    --th-selection-bg: rgba(56, 189, 248, 0.30);
+    --th-selection-text: #f1f5f9;
+
     /* — Color: Danger — */
     --th-danger-bg: #9f1239;
     --th-danger-border: #fb7185;
@@ -156,6 +160,10 @@
     --th-accent-glow: rgba(135, 206, 235, 0.08);
     --th-focus-ring: #2563eb;
     --th-focus-ring-shadow: rgba(37, 99, 235, 0.22);
+
+    /* — Color: Text Selection — */
+    --th-selection-bg: rgba(37, 99, 235, 0.22);
+    --th-selection-text: #1a1614;
 
     /* — Color: Danger — */
     --th-danger-bg: #be123c;

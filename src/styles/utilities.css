@@ -4,14 +4,30 @@
    ═══════════════════════════════════════════ */
 @layer app-utilities {
 
-  /* ─── Scrollbar ─── */
-  ::-webkit-scrollbar { width: 6px; }
+  /* ─── Scrollbar (WebKit / Blink) ─── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb {
     background: var(--th-scrollbar-thumb);
     border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover { background: var(--th-scrollbar-thumb-hover); }
+
+  /* ─── Scrollbar (Firefox) — match the WebKit thumb to the theme ─── */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--th-scrollbar-thumb) transparent;
+  }
+
+  /* ─── Text Selection — tint highlights with the theme accent ─── */
+  ::selection {
+    background: var(--th-selection-bg);
+    color: var(--th-selection-text);
+  }
+  ::-moz-selection {
+    background: var(--th-selection-bg);
+    color: var(--th-selection-text);
+  }
 
   /* ─── Focus-Visible Accessibility ─── */
   :where(button:not(:disabled), a, input:not(:disabled), select:not(:disabled), textarea:not(:disabled)):focus-visible {
