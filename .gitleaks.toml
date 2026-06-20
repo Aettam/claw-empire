@@ -1,0 +1,14 @@
+# Extends gitleaks' default rules, then allowlists VERIFIED false positives so the
+# scan alerts only on NEW, real secrets (signal over noise). Reviewed 2026-06-20:
+# the only matches were example commands in docs and fake keys in test fixtures.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Verified false positives: doc/example commands and test fixtures (no real secrets)."
+paths = [
+  '''.*\.md$''',          # READMEs / guides with example curl commands
+  '''(^|/)tests?/''',     # test fixtures with fake/mock keys
+  '''.*\.example$''',
+  '''(^|/)\.env\.example$''',
+]
