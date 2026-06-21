@@ -96,13 +96,22 @@
     --th-input-bg: rgba(16, 16, 42, 0.85);
     --th-input-border: rgba(50, 50, 95, 0.5);
 
-    /* — Color: Accent & Focus — */
-    --th-accent-glow: rgba(255, 180, 60, 0.06);
-    --th-focus-ring: #38bdf8;
-    --th-focus-ring-shadow: rgba(56, 189, 248, 0.25);
+    /* — Color: Accent (single source of truth) — */
+    /* Everything tinted with the brand accent (focus ring, focus glow,
+       text selection) derives from these two tokens. Change the hue here
+       and the whole interaction palette follows. --th-accent-rgb holds the
+       space-separated channels so it can be composed with any alpha via
+       rgb(var(--th-accent-rgb) / <alpha>). */
+    --th-accent: #38bdf8;
+    --th-accent-rgb: 56 189 248;
 
-    /* — Color: Text Selection — */
-    --th-selection-bg: rgba(56, 189, 248, 0.30);
+    /* — Color: Accent glow & Focus (derived) — */
+    --th-accent-glow: rgba(255, 180, 60, 0.06);
+    --th-focus-ring: var(--th-accent);
+    --th-focus-ring-shadow: rgb(var(--th-accent-rgb) / 0.25);
+
+    /* — Color: Text Selection (derived) — */
+    --th-selection-bg: rgb(var(--th-accent-rgb) / 0.3);
     --th-selection-text: #f1f5f9;
 
     /* — Color: Danger — */
@@ -156,13 +165,17 @@
     --th-input-bg: rgba(255, 252, 246, 0.92);
     --th-input-border: rgba(210, 200, 180, 0.45);
 
-    /* — Color: Accent & Focus — */
-    --th-accent-glow: rgba(135, 206, 235, 0.08);
-    --th-focus-ring: #2563eb;
-    --th-focus-ring-shadow: rgba(37, 99, 235, 0.22);
+    /* — Color: Accent (single source of truth) — */
+    --th-accent: #2563eb;
+    --th-accent-rgb: 37 99 235;
 
-    /* — Color: Text Selection — */
-    --th-selection-bg: rgba(37, 99, 235, 0.22);
+    /* — Color: Accent glow & Focus (derived) — */
+    --th-accent-glow: rgba(135, 206, 235, 0.08);
+    --th-focus-ring: var(--th-accent);
+    --th-focus-ring-shadow: rgb(var(--th-accent-rgb) / 0.22);
+
+    /* — Color: Text Selection (derived) — */
+    --th-selection-bg: rgb(var(--th-accent-rgb) / 0.22);
     --th-selection-text: #1a1614;
 
     /* — Color: Danger — */
