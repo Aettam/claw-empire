@@ -50,7 +50,7 @@
     "sprites:optimize": "node scripts/optimize-sprites.mjs"
   },
   "dependencies": {
-    "@remotion/cli": "^4.0.481",
+    "@remotion/cli": "^4.0.482",
     "cors": "^2.8.6",
     "express": "^5.2.1",
     "lucide-react": "^0.511.0",
@@ -59,7 +59,7 @@
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.18.0",
-    "remotion": "^4.0.481",
+    "remotion": "^4.0.482",
     "swagger-ui-express": "^5.0.1",
     "ws": "^8.21.0",
     "zod": "^4.4.3"
