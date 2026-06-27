@@ -7,7 +7,7 @@ name: Secret Scan (gitleaks)
 # (not full git history), so it's fast and low-noise.
 on:
   push:
-    branches: [main, master, "auto/**"]
+    branches: [main, master]
   pull_request:
   workflow_dispatch:
 
